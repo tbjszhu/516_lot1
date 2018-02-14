@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 import glob
+import os
 
 # Read images/masks from a directory
 
@@ -30,3 +31,40 @@ def img_generator(img_list):
         print("read img: ", f1.split('/')[-1])
         img = cv2.imread(f1)
         yield img
+
+def generator_descriptor(fileaddr, save_addr, desp_type='orb'):
+    """
+    :param fileaddr: string, images dir
+    :param save_addr: string, where to save
+    :param desp_type: 'orb'
+    :return: None
+    """
+
+    # create save directory
+    if not os.path.isdir(save_addr):
+        os.makedirs(save_addr)
+        print 'create ' + save_addr
+
+    fileList = os.listdir(fileaddr)
+    for filename in fileList:
+        if '.png' in filename:
+            print filename
+            filename_des = filename.split('.')[0]
+            img = cv2.imread(fileaddr+filename, 0)
+            # Initiate STAR detector
+
+            orb = []
+            kp = []
+
+            if desp_type == "orb" :
+                orb = cv2.ORB_create()
+
+                # find the keypoints with ORB
+                kp = orb.detect(img, None)
+
+                # compute the descriptors with ORB
+                kp, des = orb.compute(img, kp)
+
+            # creat file to store descriptor
+            np.save(save_addr+'/'+filename_des, des)
+            np.save(save_addr+'/'+filename_des+'_kp', kp)

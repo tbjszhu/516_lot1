@@ -48,7 +48,7 @@ def generator_descriptor(fileaddr, save_addr, desp_type='orb'):
     fileList = os.listdir(fileaddr)
     for filename in fileList:
         if '.png' in filename:
-            print filename
+            #print filename
             filename_des = filename.split('.')[0]
             img = cv2.imread(fileaddr+filename, 0)
             # Initiate STAR detector
@@ -57,14 +57,22 @@ def generator_descriptor(fileaddr, save_addr, desp_type='orb'):
             kp = []
 
             if desp_type == "orb" :
-                orb = cv2.ORB_create()
-
+                if int(cv2.__version__[0]) == 3:
+                    orb = cv2.ORB_create()
+                elif int(cv2.__version__[0]) == 2:
+                    orb = cv2.ORB()
+                else:
+                    print "opencv version error"
+                    sys.exit(0)
                 # find the keypoints with ORB
                 kp = orb.detect(img, None)
-
                 # compute the descriptors with ORB
                 kp, des = orb.compute(img, kp)
+                
 
             # creat file to store descriptor
             np.save(save_addr+'/'+filename_des, des)
-            np.save(save_addr+'/'+filename_des+'_kp', kp)
+            
+            # save img with keypoint
+            # img2 = cv2.drawKeypoints(img,kp,color=(0,255,0), flags=0)
+            # v2.imwrite(save_addr+'/'+filename_des+'_addkp', img2)

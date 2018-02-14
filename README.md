@@ -1,5 +1,5 @@
 # 516_lot1: find similar images using global descriptors
-todo list:
+todo list:<br> 
 (1) descriptors generation <br> 
 (2) kmeans cluserting to generate vocabulary (mean of each cluster) <--  we are now here. <br> 
 (3) generate histogramme for each image in the base, save the histogrammes <br> 

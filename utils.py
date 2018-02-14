@@ -71,8 +71,26 @@ def generator_descriptor(fileaddr, save_addr, desp_type='orb'):
                 
 
             # creat file to store descriptor
-            np.save(save_addr+'/'+filename_des, des)
+            #np.save(save_addr+'/'+filename_des, des)
             
             # save img with keypoint
             # img2 = cv2.drawKeypoints(img,kp,color=(0,255,0), flags=0)
             # v2.imwrite(save_addr+'/'+filename_des+'_addkp', img2)
+def read_all_npy(fileaddr):
+    total_mtx = []
+    fileList = os.listdir(fileaddr)
+    first_time_flag = True
+    for filename in fileList:
+        if '.npy' in filename:
+            descriptor_vector = np.load(fileaddr+'/'+filename)
+            #print filename + str(np.size(descriptor_vector))
+            if (not first_time_flag) and (np.size(descriptor_vector) >= 32):
+                total_mtx = np.vstack((total_mtx, descriptor_vector))
+            elif first_time_flag and (np.size(descriptor_vector) >= 32):
+                total_mtx = descriptor_vector
+            else:
+                print "No keypoint in %s, size of file %d" % (filename, np.size(descriptor_vector))
+            first_time_flag = False
+    print "size of total_mtx :" + str(np.shape(total_mtx))
+    return total_mtx
+            

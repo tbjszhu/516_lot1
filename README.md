@@ -1,1 +1,1 @@
-# 516_lot1 find similar images using global descriptors
+# 516_lot1: find similar images using global descriptors

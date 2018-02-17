@@ -15,7 +15,7 @@ Guide to use: <br>
   python visualWordsGen.py
   ```
   this code will generate descpritors for the train dataset (if descpts_addr = '') and use them to train a kmeans model (parameters can be <br>
-  configurated in line 51), then the kmeans models will be saved for further usage. <br>
+  configurated in line 51), then the kmeans models (~ 1 hr for training) will be saved for further usage. <br>
    
   (2) second, test for a target image, run 
   ```python 

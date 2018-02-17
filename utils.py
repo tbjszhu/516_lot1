@@ -46,7 +46,8 @@ def generator_descriptor(fileaddr, save_addr, desp_type='orb'):
     if not os.path.isdir(save_addr):
         os.makedirs(save_addr)
         print 'create ' + save_addr
-    fileaddr += '/'
+    if fileaddr[-1] != '/':
+        fileaddr += '/'
     fileList = os.listdir(fileaddr)
     for filename in fileList:
         if '.png' in filename:

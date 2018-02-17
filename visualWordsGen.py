@@ -39,7 +39,7 @@ def main():
                 tmp = np.load(strr)
                 train_data = tmp
 
-            elif np.load(strr).shape != () and np.load(str).shape[1] == train_data.shape[1]:
+            elif np.load(strr).shape != () and np.load(strr).shape[1] == train_data.shape[1]:
                 print strr
                 tmp = np.load(strr)
                 train_data = np.vstack((train_data, np.load(strr)))
@@ -56,8 +56,8 @@ def main():
     print kmeans.cluster_centers_
     if os.path.exists('./save_model') == False:
         os.mkdir('./save_model')
-    joblib.dump(kmeans, './save_model/kmeans_40.pkl')
-    joblib.dump(kmeans, './save_model/kmeans_'+str(kmeans.get_params()['n_clusters'])+'.pkl')
+    joblib.dump(kmeans, './save_model/kmeans_400.pkl')
+    #joblib.dump(kmeans, './save_model/kmeans_'+str(kmeans.get_params()['n_clusters'])+'.pkl')
 
 main()
 

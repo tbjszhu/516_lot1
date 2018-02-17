@@ -11,18 +11,18 @@ def main():
     # definitions #
     train_addr = './train/' # path where train images lie
     descpts_addr = ''  # path where are saved the descriptors, If descripts_addr = '', create them below
-    desptype='orb'  # type of descriptors to be generated
-
+    desptype='brief'  # type of descriptors to be generated
+    nfeatures = 0 # Max quantity of kp, 0 as invalid for brief
 
     # read or generate local descriptors from the base (saved as numpy array). #
 
     # if descriptors not exist, create them here !
     if descpts_addr == '':
-        descpts_addr = "./dscpt_32bits_orb"
+        descpts_addr = "./dscpt_32bits_" + desptype
         if os.path.exists(descpts_addr) == False:
             os.mkdir(descpts_addr)
-        generator_descriptor(train_addr, descpts_addr, desp_type=desptype)
-        descpts_addr = descpts_addr+"/*.npy" # path where are saved the descriptors
+        generator_descriptor(train_addr, descpts_addr, nfeatures, desp_type=desptype)
+        descpts_addr = descpts_addr + '/'+ 'nf_' + str(nfeatures) + "/*.npy" # path where are saved the descriptors
 
     # each npy file has all local descriptors for an image
     descpts_list = glob.glob(descpts_addr)
@@ -51,12 +51,13 @@ def main():
     print files_no_despt
 
     # k-means clustering for train_data
-    kmeans = KMeans(n_clusters=400, random_state=0).fit(train_data)
+    n_clusters = 100
+    kmeans = KMeans(n_clusters, random_state=0).fit(train_data)
     print kmeans.labels_
     print kmeans.cluster_centers_
     if os.path.exists('./save_model') == False:
         os.mkdir('./save_model')
-    joblib.dump(kmeans, './save_model/kmeans_400.pkl')
+    joblib.dump(kmeans, './save_model/kmeans_' + str(n_clusters) + '_nf_' + str(nfeatures) + desptype + '.pkl')
     #joblib.dump(kmeans, './save_model/kmeans_'+str(kmeans.get_params()['n_clusters'])+'.pkl')
 
 main()

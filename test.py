@@ -42,7 +42,7 @@ def main():
             img_gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             hist = generateHist(kmeans, img_gs, 'image', nfeatures, descriptor_type)
             filename = addr.split('/')[-1][0:-4]
-            np.save(sub_hist_addr + filename + '_' + descriptor_type, hist)
+            np.save(sub_hist_addr + '/' + filename + '_' + descriptor_type, hist)
 
     if not iteration:
         target = cv2.imread(target_addr)

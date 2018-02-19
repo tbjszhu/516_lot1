@@ -16,11 +16,11 @@ def main():
     #model_dir = "./save_model/kmeans_100.pkl" # pretrained kmeans model for ORB 100 cluster, 100 nfeatures
     #model_dir = "./save_model/kmeans_100_nf_50.pkl" # pretrained kmeans model for ORB 100 cluster, 50 nfeatures
     model_dir = "./save_model/kmeans_100_nf_0brief.pkl" # pretrained kmeans model for Brief 100 cluster
-    target_addr = "./test/253_c.png" # target image to search
+    target_addr = "./test/312_r.png" # target image to search
     target_dir = "./test/" # target dir to search
     hist_addr = ''  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
     descriptor_type = 'brief'
-    iteration = True
+    iteration = False
     nfeatures = 0 # Max quantity of kp, 0 as invalid for brief
 
     # search similar images from base #
@@ -32,9 +32,9 @@ def main():
         hist_addr = './hists/'
         if os.path.exists(hist_addr) == False:
             os.mkdir(hist_addr[0:-1])
-        sub_hist_addr = './hists/' + descriptor_type
+        sub_hist_addr = './hists/' + descriptor_type + '/'
         if os.path.exists(sub_hist_addr) == False:
-            os.mkdir(sub_hist_addr)    
+            os.mkdir(sub_hist_addr[0:-1])    
         imgs_addr = getImageListFromDir(base_dir)
         for addr in imgs_addr :
             #print addr
@@ -46,7 +46,8 @@ def main():
 
     if not iteration:
         target = cv2.imread(target_addr)
-        results, imgs_list = searchFromBase(sub_hist_addr, target,kmeans, nfeatures, has_hist=True)
+        results, imgs_list = searchFromBase(sub_hist_addr, target,kmeans, nfeatures, descriptor_type, has_hist=True)
+        print results
         count = 1
         for key, value in results:
             filename = imgs_list[key].split('/')[-1]
@@ -56,7 +57,6 @@ def main():
         image_list = getImageListFromDir(target_dir)
         i = 0
         
-        nfeatures = 100 # descriptor quantity
         csv_file_path = './csv_result'
         csv_file_name = './csv_result/kmeans_' + str(kmeans.get_params()['n_clusters']) + '_nf_' + str(nfeatures) + descriptor_type + '.csv'
         if os.path.exists(csv_file_path) == False:
@@ -69,13 +69,13 @@ def main():
         note_global = 0 # global note for all the images in this classification
         first_count_global = 0
         second_count_global = 0
-        
+        count_control = 0
         for target, target_filename in img_generator(image_list):
             target_filename = target_filename.split('.')[0]
             target_fileno = target_filename.split('_')[0]
             #print target_fileno
             
-            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, has_hist=True)
+            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, has_hist=True)
             
             note = 10
             note_total = 0 # note for one image
@@ -99,6 +99,10 @@ def main():
                 note -= 1
             writer.writerow([str(target_filename), str(first_match), str(second_match), str(note_total)])
             note_global += note_total
+
+            count_control += 1
+            if count_control > 10:
+                break
             
         writer.writerow(['Conclusion', str(first_count_global), str(second_count_global), str(note_global)])
         csvfile.close()

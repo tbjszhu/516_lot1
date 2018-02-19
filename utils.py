@@ -192,7 +192,7 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
 
 # search similar images of a given target (gs image) in terms of distance of hists.
 
-def searchFromBase(base_dir, target, model, nfeatures, has_hist):
+def searchFromBase(base_dir, target, model, nfeatures, decpt_type, has_hist):
     """
     :param base_dir: search base of images
     :param target: target image numpy grayscale image
@@ -205,7 +205,7 @@ def searchFromBase(base_dir, target, model, nfeatures, has_hist):
     else :
         imgs_addr = getImageListFromDir(base_dir)
     dist = {}
-    target_hist = generateHist(model, target, 'image', nfeatures, 'orb').astype(np.float32)
+    target_hist = generateHist(model, target, 'image', nfeatures, decpt_type).astype(np.float32)
     #print np.sum(target_hist)
     
     # calculate distance between target hist and base hists
@@ -215,7 +215,7 @@ def searchFromBase(base_dir, target, model, nfeatures, has_hist):
         if has_hist == False:
             print img_addr
             img_gs = cv2.imread(img_addr,'0')
-            hist = generateHist(model, img_gs, 'image', 'orb')
+            hist = generateHist(model, img_gs, 'image', decpt_type)
         else:
             hist = np.load(img_addr)
         dist[idx] = np.linalg.norm(hist-target_hist)  # eucudian distance

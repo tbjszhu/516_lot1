@@ -9,6 +9,7 @@ gray = np.float32(gray)
 dst = cv2.cornerHarris(gray,2,3,0.04)
 #dst = cv2.goodFeaturesToTrack(gray, 500, 0.03, 10, None, None, 2, useHarrisDetector=True, k=0.04)
 
+print dst
 print dst.shape
 
 #result is dilated for marking the corners, not important

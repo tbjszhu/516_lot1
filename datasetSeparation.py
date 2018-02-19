@@ -8,11 +8,10 @@ import os
 
 ### definition ###
 
-data_dir = "/home/yxu/Downloads/png4/" # data dir
+data_dir = "/home/yxu/Downloads/png4_col/" # data dir
 
-train_path = "./train_2/" # where to save train images
-
-test_path = "./test_2/" # where to save test images
+train_path = "./train_col/" # where to save train images
+test_path = "./test_col/" # where to save test images
 
 # create train directory
 if not os.path.isdir(train_path):

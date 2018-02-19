@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0cb0f4ed-5d29-438d-8adf-8749ae3a439f" name="Default" comment="" />
+    <list default="true" id="0cb0f4ed-5d29-438d-8adf-8749ae3a439f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datasetSeparation.py" afterPath="$PROJECT_DIR$/datasetSeparation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dataset_fusion.py" afterPath="$PROJECT_DIR$/dataset_fusion.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="datasetSeparation.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="datasetSeparation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/datasetSeparation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="14" column="21" lean-forward="false" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+            <state relative-caret-position="180">
+              <caret line="10" column="40" lean-forward="false" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
               <folding>
                 <element signature="e#61#71#0" expanded="true" />
               </folding>
@@ -44,11 +47,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dataset_fusion.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="dataset_fusion.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dataset_fusion.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+            <state relative-caret-position="270">
+              <caret line="18" column="33" lean-forward="false" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
               <folding>
                 <element signature="e#93#103#0" expanded="true" />
               </folding>
@@ -114,6 +117,8 @@
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/visualWordsGen.py" />
+        <option value="$PROJECT_DIR$/datasetSeparation.py" />
+        <option value="$PROJECT_DIR$/dataset_fusion.py" />
       </list>
     </option>
   </component>
@@ -165,7 +170,41 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.dataset_fusion">
+    <configuration name="datasetSeparation" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="516_lot1" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasetSeparation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="dataset_fusion" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="516_lot1" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dataset_fusion.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -217,16 +256,20 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="3">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.test" />
       <item index="1" class="java.lang.String" itemvalue="Python.utils" />
       <item index="2" class="java.lang.String" itemvalue="Python.visualWordsGen" />
+      <item index="3" class="java.lang.String" itemvalue="Python.datasetSeparation" />
+      <item index="4" class="java.lang.String" itemvalue="Python.dataset_fusion" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.test" />
-        <item index="1" class="java.lang.String" itemvalue="Python.visualWordsGen" />
-        <item index="2" class="java.lang.String" itemvalue="Python.utils" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Python.dataset_fusion" />
+        <item index="1" class="java.lang.String" itemvalue="Python.datasetSeparation" />
+        <item index="2" class="java.lang.String" itemvalue="Python.test" />
+        <item index="3" class="java.lang.String" itemvalue="Python.visualWordsGen" />
+        <item index="4" class="java.lang.String" itemvalue="Python.utils" />
       </list>
     </recent_temporary>
   </component>
@@ -467,16 +510,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dataset_fusion.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding>
-            <element signature="e#93#103#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ORB.ipynb">
       <provider selected="true" editor-type-id="ipnb-editor">
         <state>
@@ -696,10 +729,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/datasetSeparation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="14" column="21" lean-forward="false" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+        <state relative-caret-position="180">
+          <caret line="10" column="40" lean-forward="false" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
           <folding>
             <element signature="e#61#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dataset_fusion.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="33" lean-forward="false" selection-start-line="18" selection-start-column="33" selection-end-line="18" selection-end-column="33" />
+          <folding>
+            <element signature="e#93#103#0" expanded="true" />
           </folding>
         </state>
       </provider>

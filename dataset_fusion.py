@@ -13,10 +13,10 @@ from shutil import copyfile
 
 data_dir = "/home/yxu/Downloads/png4/" # data dir
 
-train_1_path = "./train/" # where to save train rotated images
-test_1_path = "./test/" # where to save test rotated images
-train_2_path = "./train_2/" # where to save train rotated images of luminence change
-test_2_path = "./test_2/" # where to save test images of luminence change
+train_1_path = "./train_rotate/" # where to save train rotated images
+test_1_path = "./test_rotate/" # where to save test rotated images
+train_2_path = "./train_col/" # where to save train rotated images of luminence change
+test_2_path = "./test_col/" # where to save test images of luminence change
 
 merged_train = "./merged_train/" # final train set
 merged_test = "./merged_test/" # final test set

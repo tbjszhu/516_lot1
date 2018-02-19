@@ -64,10 +64,17 @@ def brief_descriptor_generator(data, nfeatures):
 
     # nfeatures can not be controlled in STAR 
     # Initiate STAR detector
-    star = cv2.FeatureDetector_create("STAR")
+    star = []
+    brief = []
+    if cv2.__version__[0] == "2" :
+        star = cv2.FeatureDetector_create("STAR")
 
-    # Initiate BRIEF extractor
-    brief = cv2.DescriptorExtractor_create("BRIEF")
+        # Initiate BRIEF extractor
+        brief = cv2.DescriptorExtractor_create("BRIEF")
+
+    else:
+        star = cv2.xfeatures2d.StarDetector_create()
+        brief = cv2.xfeatures2d.BriefDescriptorExtractor_create()
 
     # find the keypoints with STAR
     kp = star.detect(data,None)
@@ -75,7 +82,7 @@ def brief_descriptor_generator(data, nfeatures):
     # compute the descriptors with BRIEF
     kp, des = brief.compute(data, kp)
 
-    #print des.shape
+    print "des shape", des.shape
 
     return kp, des
 
@@ -106,12 +113,14 @@ def generator_descriptor(fileaddr, save_addr, nfeatures, desp_type):
         print 'create ' + save_addr
     if fileaddr[-1] != '/':
         fileaddr += '/'
-    fileList = os.listdir(fileaddr)
-    for filename in fileList:
-        if '.png' in filename:
-            print filename
-            filename_des = filename.split('.')[0]
-            data = cv2.imread(fileaddr+filename, 0)
+    #fileList = os.listdir(fileaddr)
+    fileList = glob.glob(fileaddr+"*/*/*.png")
+    print fileList
+    for file in fileList:
+        if '.png' in file:
+            print file
+            filename_des = file.split('/')[-1].split('.')[0]
+            data = cv2.imread(file, 0)
 
             #todo: add new detectors here !
 
@@ -124,7 +133,7 @@ def generator_descriptor(fileaddr, save_addr, nfeatures, desp_type):
             elif desp_type == "harris":
                 des = harris_descriptor_generator(data, nfeatures)
             else:
-                print "Algo : " + decpt_type + " is not supported"
+                print "Algo : " + desp_type + " is not supported"
 
             #creat sub dir classified by nfeatures to store descriptor
             subdir_addr = save_addr+'/'+ 'nf_' + str(nfeatures)

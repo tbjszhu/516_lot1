@@ -11,22 +11,24 @@ import csv
 def main():
     # definitions #
 
-    base_dir = "./train/" # base dir for search
+    base_dir = "./min_merged_train/" # base dir for search
     #model_dir = "./save_model/kmeans_50_dim_100.pkl" # pretrained kmeans model for ORB 50 cluster, 100 nfeatures
     #model_dir = "./save_model/kmeans_100.pkl" # pretrained kmeans model for ORB 100 cluster, 100 nfeatures
     #model_dir = "./save_model/kmeans_100_nf_50.pkl" # pretrained kmeans model for ORB 100 cluster, 50 nfeatures
     model_dir = "./save_model/kmeans_100_nf_0brief.pkl" # pretrained kmeans model for Brief 100 cluster
-    target_addr = "./test/312_r.png" # target image to search
-    target_dir = "./test/" # target dir to search
+    #target_addr = "./min_merged_test/251/rotation/251_r.png" # target image to search
+    target_addr = "./min_merged_test/252/luminence/252_i150.png"
+    target_dir = "./min_merged_test/" # target dir to search
     hist_addr = ''  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
-    descriptor_type = 'brief'
-    iteration = False
-    nfeatures = 0 # Max quantity of kp, 0 as invalid for brief
-
+    descriptor_type = 'orb'
+    iteration = 4
+    nfeatures = 100 # Max quantity of kp, 0 as invalid for brief
+    
     # search similar images from base #
     kmeans = joblib.load(model_dir) # load pretrained kmeans model
     print ('kmeans parameters', kmeans.get_params())
 
+    hist_addr = './hists/'
     # if hist_addr does not exist, generate hists for the dataset #
     if hist_addr == '':
         hist_addr = './hists/'
@@ -43,17 +45,19 @@ def main():
             hist = generateHist(kmeans, img_gs, 'image', nfeatures, descriptor_type)
             filename = addr.split('/')[-1][0:-4]
             np.save(sub_hist_addr + '/' + filename + '_' + descriptor_type, hist)
-
-    if not iteration:
+    else:
+        sub_hist_addr = './hists/' + descriptor_type + '/'
+    
+    if (iteration == 1):
         target = cv2.imread(target_addr)
-        results, imgs_list = searchFromBase(sub_hist_addr, target,kmeans, nfeatures, descriptor_type, has_hist=True)
-        print results
+        results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, has_hist=True)
         count = 1
         for key, value in results:
             filename = imgs_list[key].split('/')[-1]
             print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
             count += 1
-    else: # try to find self rotated image from the database; rank the result; store in a csv file
+            
+    elif (iteration == 2): # try to find self rotated image from the database; rank the result; store in a csv file
         image_list = getImageListFromDir(target_dir)
         i = 0
         
@@ -99,13 +103,16 @@ def main():
                 note -= 1
             writer.writerow([str(target_filename), str(first_match), str(second_match), str(note_total)])
             note_global += note_total
-
-            count_control += 1
-            if count_control > 10:
-                break
             
         writer.writerow(['Conclusion', str(first_count_global), str(second_count_global), str(note_global)])
         csvfile.close()
+    elif (iteration == 3): # generate for only all class
+        pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type)
+    elif (iteration == 4): # generate for only one class
+        class_id = 262
+        pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id)        
+    else:
+        print "mode error should be [1~3]"
                 
 if __name__ == '__main__':
     main()

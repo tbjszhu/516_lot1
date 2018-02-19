@@ -6,18 +6,31 @@ import os
 from itertools import groupby
 import sys
 from collections import OrderedDict
+import random
+import csv
 
 # Read images/masks from a directory
+ranking_width = 20
 
 def getImageListFromDir(img_dir, filetype='png'):
     """
     :param img_dir: imgs root dir, string
     :param filetype: "png", "jpg" or "bmp", string
     :return: list of images, list
+    """    
+    img_dir = img_dir + '/*/*/' + '*.'+filetype
+    l = sorted(glob.glob(img_dir)) #./merged_train/999/rotation/999_r.png
+    return l
+
+def getHistListFromDir(img_dir):
     """
+    :param img_dir: imgs root dir, string
+    :param filetype: "png", "jpg" or "bmp", string
+    :return: list of images, list
+    """
+    filetype='npy'
     img_dir = img_dir + '*.'+filetype
-    print img_dir
-    l = sorted(glob.glob(img_dir))
+    l = sorted(glob.glob(img_dir)) #./merged_train/999/rotation/999_r.png
     return l
 
 # read images with img generator
@@ -201,7 +214,7 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
 
 # search similar images of a given target (gs image) in terms of distance of hists.
 
-def searchFromBase(base_dir, target, model, nfeatures, decpt_type, has_hist):
+def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, has_hist):
     """
     :param base_dir: search base of images
     :param target: target image numpy grayscale image
@@ -210,11 +223,11 @@ def searchFromBase(base_dir, target, model, nfeatures, decpt_type, has_hist):
     :return: a list of ranking of top 10 similars images, [ (index, distance value)] and a list of image dir
     """
     if has_hist:
-        imgs_addr = getImageListFromDir(base_dir, 'npy')
+        imgs_addr = getHistListFromDir(base_dir)
     else :
         imgs_addr = getImageListFromDir(base_dir)
     dist = {}
-    target_hist = generateHist(model, target, 'image', nfeatures, decpt_type).astype(np.float32)
+    target_hist = generateHist(model, target, 'image', nfeatures, 'orb').astype(np.float32)
     #print np.sum(target_hist)
     
     # calculate distance between target hist and base hists
@@ -224,7 +237,7 @@ def searchFromBase(base_dir, target, model, nfeatures, decpt_type, has_hist):
         if has_hist == False:
             print img_addr
             img_gs = cv2.imread(img_addr,'0')
-            hist = generateHist(model, img_gs, 'image', decpt_type)
+            hist = generateHist(model, img_gs, 'image', 'orb')
         else:
             hist = np.load(img_addr)
         dist[idx] = np.linalg.norm(hist-target_hist)  # eucudian distance
@@ -235,4 +248,110 @@ def searchFromBase(base_dir, target, model, nfeatures, decpt_type, has_hist):
     for key, value in sorted_d.items():
         temp = [key, value] # [index, distance]
         dictlist.append(temp)
-    return dictlist[0:10], imgs_addr
+    return dictlist[0:ranking_width], imgs_addr
+
+def get_class_image_list(target_dir, class_name):
+
+    l = glob.glob(target_dir + '/' + class_name + '/*/*')
+    return l
+    
+def generate_random_image_list(image_list, class_name, class_start, class_num, num):
+
+    class_name = str(class_name)
+    image_list_temp = image_list[:] # to store different image classes
+    same_class_image_count = 0
+    same_class_list = []
+    
+    for item in image_list_temp: # find the files from the same class
+        if str(class_name) in item:
+            same_class_list.append(item)
+            same_class_image_count += 1
+    for item in same_class_list: # delete the files from the same class
+        image_list_temp.remove(item)    
+            
+    rand_file_num_list = []
+    while True: # generate "num" defferent file num
+        rand_file_num = str(random.randint(class_start, class_start + (class_num - 1) * same_class_image_count - 1))
+        if (rand_file_num not in rand_file_num_list):
+            rand_file_num_list.append(rand_file_num)
+        else:
+            continue
+        if len(rand_file_num_list) == num:
+            break;
+    rand_image_list = []
+    for item in rand_file_num_list:
+        rand_image_list.append(image_list_temp[int(item) - class_start])
+    
+    return rand_image_list
+
+def csv_init(csv_file_path, kmeans, nfeatures, class_name, descriptor_type):
+    csv_file_name = csv_file_path + '/kmeans_' + str(kmeans.get_params()['n_clusters']) + '_nf_' + str(nfeatures) + descriptor_type + '_class_' + class_name + '.csv'
+    if os.path.exists(csv_file_path) == False:
+        os.mkdir(csv_file_path)
+    csvfile = file(csv_file_name, 'wb')
+    index = range(ranking_width)
+    index_str = map(str, index)
+    file_header = ['id'] + index_str + ['Total']
+    writer = csv.writer(csvfile)
+    writer.writerow(file_header)
+    return csvfile, writer
+
+def csv_deinit(csvfile, writer, score_global):
+    writer.writerow(['Conclusion'] + score_global)
+    csvfile.close()    
+    
+def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id = -1, has_hist=True):
+    
+    image_list = getImageListFromDir(target_dir)
+    class_list = []
+    dir_list = glob.glob(target_dir+'/*')
+    for item in dir_list:
+        class_list.append(item.split('/')[-1])
+    class_num = len(class_list)
+    class_start = int(class_list[0])
+    
+    if class_num <= 0:
+        print "class_num 0 error"
+        sys.exit(0)
+    if class_id != -1 :
+        class_id = str(class_id)
+        if class_id in class_list:
+            class_list = [class_id]
+        else:
+            print "class_id: %d not in class_list" % (class_id)
+    
+    for class_name in class_list: # iteration for each class
+        class_image_list = get_class_image_list(target_dir, class_name)
+        random_image_list = generate_random_image_list(image_list, class_name, class_start, class_num, 5)
+        class_image_list.extend(random_image_list) # joint two lists together
+
+        csv_file_path = './pr_csv'
+        csvfile, writer = csv_init(csv_file_path, kmeans, nfeatures, class_name, descriptor_type)
+        score_global = [0] * (ranking_width + 1)
+        
+        for target, target_filename in img_generator(class_image_list): # iteration for each test image from this class 
+            
+            target_filename = target_filename.split('.')[0]
+            target_class = target_filename.split('_')[0]
+
+            score_vector = [0] * ranking_width
+            score_total = 0
+            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, has_hist=True)
+            count = 0
+            for key, value in results:
+                if value == 0:
+                    print "error: value in denominator is 0"
+                    sys.exit(0)
+                score = 1.0/value
+                filename = imgs_list[key].split('/')[-1]
+                matched_class = filename.split('_')[0]
+                if matched_class == class_name:
+                    score_vector[count] = score
+                    score_global[count] += score
+                    score_total += score
+                count += 1
+            score_vector_str = map(str, score_vector)
+            writer.writerow([str(target_filename)] + score_vector + [str(score_total)])
+            score_global[-1] += score_total
+        score_global_str = map(str, score_global)
+        csv_deinit(csvfile, writer, score_global_str)

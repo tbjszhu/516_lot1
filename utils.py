@@ -8,6 +8,8 @@ import sys
 from collections import OrderedDict
 import random
 import csv
+from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import auc
 
 # Read images/masks from a directory
 train_width = 10 # the number of train images for each class
@@ -100,7 +102,8 @@ def brief_descriptor_generator(data, nfeatures):
     # compute the descriptors with BRIEF
     kp, des = brief.compute(data, kp)
     if des is not None :
-        print "des shape", des.shape
+        pass
+         #print "des shape", des.shape
 
     return kp, des
 
@@ -121,7 +124,8 @@ def SIFT_descriptor_generator(data, nfeatures):
     sift = cv2.xfeatures2d.SIFT_create(nfeatures=nfeatures)
     kps, descs = sift.detectAndCompute(data,None)
     if descs is not None:
-        print "des shape", descs.shape
+        pass
+        #print "des shape", descs.shape
     return kps, descs
 
 # generator descriptors
@@ -260,10 +264,10 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
     for key, value in sorted_d.items():
         temp = [key, value] # [index, distance]
         class_actual = imgs_addr[key].split('/')[-1].split('_')[0]
-        print temp
         if class_actual == class_id:
             dictlist.append(temp)
-        
+            filename = imgs_addr[key].split('/')[-1]
+            print filename,value
     return dictlist, imgs_addr
 
 
@@ -293,7 +297,7 @@ def generate_random_image_list(image_list, class_name, class_start, class_num, n
         else:
             continue
         if len(rand_file_num_list) == num:
-            break;
+            break
     rand_image_list = []
     for item in rand_file_num_list:
         rand_image_list.append(image_list_temp[int(item) - class_start])    
@@ -317,8 +321,40 @@ def csv_deinit(csvfile, writer, score_global):
     print score_global
     csvfile.close()    
 
-def pr_image_generate(pr_list):
-    pass
+def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):
+    """
+    :param pr_list: a list of lists (filename, label, score)
+    :param descriptor_type : string, descriptor type
+    :param nfeatures: max number of keypoints
+    :param kmeans : kmeans model
+    :return: None
+    """
+
+    y_test =  [] # label
+    y_score =  [] # prediction
+    cls = pr_list[0][0].split('_')[0]
+    for _, label, score in pr_list:
+        y_test.append(label)
+        y_score.append(score)
+
+    precision, recall, _ = precision_recall_curve(y_test, y_score)
+
+    plt.step(recall, precision, color='b', alpha=0.2,
+             where='post')
+    plt.fill_between(recall, precision, step='post', alpha=0.2,
+                     color='b')
+    area = auc(recall,precision)
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.ylim([0.0, 1.05])
+    plt.xlim([0.0, 1.0])
+    plt.title('class '+str(cls)+' '+str(descriptor_type)+'_k'+str(kmeans.get_params()['n_clusters'])+
+                '_nf'+str(nfeatures)+' Precision-Recall AUC ={0:0.2f}'.format(
+        area))
+    if os.path.exists('./pr_figures') is False:
+        os.mkdir('./pr_figures')
+    plt.savefig('./pr_figures/'+"class_"+str(cls)+' '+str(descriptor_type)+' k'+str(kmeans.get_params()['n_clusters'])+
+                ' nf'+str(nfeatures)+'.png')
     
 def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id = -1, has_hist=True):
     
@@ -364,11 +400,7 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
             results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist=True)
             count = 0
             for key, value in results:
-                if value == 0:
-                    print "error: value in denominator is 0"
-                    csv_deinit(csvfile, writer, score_global_str)
-                    sys.exit(0)
-                score = 1.0 / value
+                score = 1.0 / (value+0.001)
                 filename = imgs_list[key].split('/')[-1]
                 matched_class = filename.split('_')[0]
                 if matched_class == class_name:
@@ -382,4 +414,4 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
             score_global[-1] += score_total
         score_global_str = map(str, score_global)
         csv_deinit(csvfile, writer, score_global_str)
-        pr_image_generate(pr_list)
+        pr_image_generate(pr_list, descriptor_type, kmeans, nfeatures)

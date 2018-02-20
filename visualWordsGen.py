@@ -12,15 +12,15 @@ def main():
     train_addr = './min_merged_train/' # path where train images lie
     descpts_addr = "" # path where are saved the descriptors, If descripts_addr = '', create them below
     desptype='orb'  # type of descriptors to be generated
-    nfeatures = 100 # Max quantity of kp, 0 as invalid for brief
-    pick_nfeatures = 100 # choose top pick_nfeatures
+    nfeatures = 50 # Max quantity of kp, 0 as invalid for brief
+    pick_nfeatures = 50 # choose top pick_nfeatures
 
     # read or generate local descriptors from the base (saved as numpy array). #
 
     # if descriptors not exist, create them here !
 
     if descpts_addr == '':
-        descpts_addr = "./dscpt_32bits" + desptype
+        descpts_addr = "./dscpt_128bits_" + desptype
         if os.path.exists(descpts_addr) == False:
             os.mkdir(descpts_addr)
         generator_descriptor(train_addr, descpts_addr, nfeatures, desp_type=desptype)
@@ -56,7 +56,7 @@ def main():
     print files_no_despt
 
     # k-means clustering for train_data
-    n_clusters = 100
+    n_clusters = 50
     kmeans = KMeans(n_clusters, random_state=0).fit(train_data)
     if os.path.exists('./save_model') == False:
         os.mkdir('./save_model')

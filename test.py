@@ -11,27 +11,21 @@ import csv
 def main():
     # definitions #
 
-    #base_dir = "./min_merged_train/" # base dir for search
     base_dir = "./min_merged_train/" # base dir for search
-    #model_dir = "./save_model/kmeans_50_dim_100.pkl" # pretrained kmeans model for ORB 50 cluster, 100 nfeatures
-    model_dir = "./save_model/opencv3_kmeans_100_nf_100orb.pkl" # pretrained kmeans model for ORB 100 cluster, 100 nfeatures
-    #model_dir = "./save_model/kmeans_100_nf_50.pkl" # pretrained kmeans model for ORB 100 cluster, 50 nfeatures
-    #model_dir = "./save_model/kmeans_100_nf_0brief.pkl" # pretrained kmeans model for Brief 100 cluster
-    model_dir = "./save_model/kmeans_100_nf_0brief.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/opencv3_kmeans_mini_100_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
     #target_addr = "./min_merged_test/251/rotation/251_r.png" # target image to search
     target_addr = "./min_merged_test/252/luminence/252_i150.png"
     target_dir = "./min_merged_test/" # target dir to search
-    hist_addr = ''  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
-    descriptor_type = 'orb'
+    hist_addr = './hists/'  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
+    descriptor_type = 'sift'
     iteration = 3
     nfeatures = 100 # Max quantity of kp, 0 as invalid for brief 
-    class_id = 255#target_addr.split('/')[-1].split('_')[0]
+    class_id = 255 #target_addr.split('/')[-1].split('_')[0]
        
     # search similar images from base #
     kmeans = joblib.load(model_dir) # load pretrained kmeans model
     print ('kmeans parameters', kmeans.get_params())    
 
-    hist_addr = ''
     # if hist_addr does not exist, generate hists for the dataset #
     if hist_addr == '':
         hist_addr = './hists/'

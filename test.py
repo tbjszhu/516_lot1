@@ -11,39 +11,33 @@ import argparse
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100orb.pkl" # pretrained kmeans model for Brief 100 cluster
-    target_addr = "./min_merged_test/251/rotation/251_r.png" # target image to search
+    model_dir = "./save_model/cv3_kmeans_mini_50_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
+    target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
     #target_addr = "./min_merged_test/252/luminence/252_i150.png"
     target_dir = "./min_merged_test/" # target dir to search
-    hist_addr = './hists/'  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
+    hist_addr = './hists/'+descriptor_type # generated histograms for the dataset, if hist_addr = '', we will generate hists below
     # search similar images from base #
     kmeans = joblib.load(model_dir) # load pretrained kmeans model
     print ('kmeans parameters', kmeans.get_params())    
 
     # if hist_addr does not exist, generate hists for the dataset #
-    if hist_addr == '':
-        has_hist = False
-        hist_addr = './hists/'
-        if os.path.exists(hist_addr) == False:
-            os.mkdir(hist_addr[0:-1])
-        sub_hist_addr = './hists/' + descriptor_type + '/'
-        if os.path.exists(sub_hist_addr) == False:
-            os.mkdir(sub_hist_addr[0:-1])    
+    if os.path.exists(hist_addr) == False:
+        os.makedirs(hist_addr)
         imgs_addr = getImageListFromDir(train_addr)
-        for addr in imgs_addr :
+        for addr in imgs_addr:
             #print addr
             img = cv2.imread(addr)
             img_gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             hist = generateHist(kmeans, img_gs, 'image', nfeatures, descriptor_type)
             filename = addr.split('/')[-1][0:-4]
-            np.save(sub_hist_addr + '/' + filename + '_' + descriptor_type, hist)
+            np.save(hist_addr + '/' + filename + '_' + descriptor_type, hist)
+        has_hist = True
     else:
         has_hist = True
-        sub_hist_addr = hist_addr + '/' + descriptor_type + '/'
 
     if (mode == 1):
         target = cv2.imread(target_addr)
-        results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist)
+        results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist)
         count = 1
         print results
         for key, value in results:
@@ -73,7 +67,7 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
             target_fileno = target_filename.split('_')[0]
             #print target_fileno
             
-            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, has_hist=True)
+            results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, has_hist=True)
             
             note = 10
             note_total = 0 # note for one image
@@ -101,19 +95,19 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
         writer.writerow(['Conclusion', str(first_count_global), str(second_count_global), str(note_global)])
         csvfile.close()
     elif (mode == 3): # generate for all class
-        pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type)
+        pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type)
     elif (mode == 4): # generate for only one class
-        pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id)
+        pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, class_id)
     else:
         print "mode error should be [1~3]"
                 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", type=int, default="100",
+    parser.add_argument("-n", type=int, default=100,
                         help="Number of feature point for each image.")
     parser.add_argument("-c", type=int, default=50,
                         help="Number of cluster for kmeans")
-    parser.add_argument("-d", type=str, default='orb',
+    parser.add_argument("-d", type=str, default='sift',
                         help="Descriptor Type")
     parser.add_argument("-m", type=int, default=4,
                         help="Execution Mode")                                               

@@ -33,7 +33,7 @@ def getHistListFromDir(img_dir):
     :return: list of images, list
     """
     filetype = 'npy'
-    img_dir = img_dir + '*.' + filetype
+    img_dir = img_dir + '/*.' + filetype
     l = sorted(glob.glob(img_dir))  # ./merged_train/999/rotation/999_r.png
     return l
 
@@ -255,7 +255,7 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
     for key, value in sorted_d.items():
         temp = [key, value] # [index, distance]
         class_actual = imgs_addr[key].split('/')[-1].split('_')[0]
-        if class_actual == class_id:
+        if class_actual == str(class_id):
             dictlist.append(temp)
             filename = imgs_addr[key].split('/')[-1]
             #print filename,value

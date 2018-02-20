@@ -202,7 +202,7 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
             kp, des = brief_descriptor_generator(data, nfeatures)
 
         elif decpt_type == "sift":
-            kp, des = SIFT_descriptor_generator(data, nfeatures)
+            kps, des = SIFT_descriptor_generator(data, nfeatures)
         else:
             print "Algo : " + decpt_type + " is not supported"
 

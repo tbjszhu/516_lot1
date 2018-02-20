@@ -20,11 +20,7 @@ def main():
     # if descriptors not exist, create them here !
 
     if descpts_addr == '':
-<<<<<<< Updated upstream
         descpts_addr = "./dscpt_32bits" + desptype
-=======
-        descpts_addr = "./dscpt_32bits_" + desptype
->>>>>>> Stashed changes
         if os.path.exists(descpts_addr) == False:
             os.mkdir(descpts_addr)
         generator_descriptor(train_addr, descpts_addr, nfeatures, desp_type=desptype)

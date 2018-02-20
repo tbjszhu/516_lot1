@@ -340,8 +340,8 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
         else:
             print "class_id: %d not in class_list" % (class_id)
 
-    pr_list = []
     for class_name in class_list: # iteration for each class
+        pr_list = []
         class_image_list = get_class_image_list(target_dir, class_name)
         random_image_list, class_width = generate_random_image_list(image_list, class_name, class_start, class_num, 5)
         class_image_list.extend(random_image_list) # joint two lists together
@@ -382,4 +382,4 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
             score_global[-1] += score_total
         score_global_str = map(str, score_global)
         csv_deinit(csvfile, writer, score_global_str)
-    pr_image_generate(pr_list)
+        pr_image_generate(pr_list)

@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-img = cv2.imread('test1.png',0)
+img = cv2.imread('test4.png',0)
 
 # Initiate STAR detector
 #star = cv2.FeatureDetector_create("STAR")

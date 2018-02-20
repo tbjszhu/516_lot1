@@ -84,27 +84,22 @@ def brief_descriptor_generator(data, nfeatures):
 
     # nfeatures can not be controlled in STAR
     # Initiate STAR detector
-    star = []
-    brief = []
-    if cv2.__version__[0] == "2":
-        star = cv2.FeatureDetector_create("STAR")
-
-        # Initiate BRIEF extractor
-        brief = cv2.DescriptorExtractor_create("BRIEF")
-
-    else:
-        star = cv2.xfeatures2d.StarDetector_create()
-        brief = cv2.xfeatures2d.BriefDescriptorExtractor_create()
-
+    star = cv2.StarDetector()
+    # Initiate BRIEF extractor
+    brief = cv2.DescriptorExtractor_create("BRIEF")
     # find the keypoints with STAR
-    kp = star.detect(data, None)
-
+    kp = star.detect(data)
     # compute the descriptors with BRIEF
     kp, des = brief.compute(data, kp)
+    
     if des is not None :
+<<<<<<< Updated upstream
         pass
          #print "des shape", des.shape
 
+=======
+        print "descriptor shape", des.shape
+>>>>>>> Stashed changes
     return kp, des
 
 
@@ -145,7 +140,7 @@ def generator_descriptor(fileaddr, save_addr, nfeatures, desp_type):
         fileaddr += '/'
     # fileList = os.listdir(fileaddr)
     fileList = glob.glob(fileaddr + "*/*/*.png")
-    print fileList
+    #print fileList
     for file in fileList:
         if '.png' in file:
             print file
@@ -161,9 +156,13 @@ def generator_descriptor(fileaddr, save_addr, nfeatures, desp_type):
                 kp, des = brief_descriptor_generator(data, nfeatures)
 
             elif desp_type == "sift":
-                kps, des = SIFT_descriptor_generator(data, nfeatures)
+                kp, des = SIFT_descriptor_generator(data, nfeatures)
             else:
                 print "Algo : " + desp_type + " is not supported"
+                
+            if kp != [] and des != []:
+                kp = kp[0:nfeatures]
+                des = des[0:nfeatures]
 
             # creat sub dir classified by nfeatures to store descriptor
             subdir_addr = save_addr + '/' + 'nf_' + str(nfeatures)
@@ -251,7 +250,7 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
         img_gs = []
         hist = []
         if has_hist == False:
-            print img_addr
+            #print img_addr
             img_gs = cv2.imread(img_addr, '0')
             hist = generateHist(model, img_gs, 'image', descriptor_type)
         else:
@@ -318,7 +317,6 @@ def csv_init(csv_file_path, kmeans, nfeatures, class_name, class_width, descript
 
 def csv_deinit(csvfile, writer, score_global):
     writer.writerow(['Conclusion'] + score_global[:-1] + ["-"] + [score_global[-1]])
-    print score_global
     csvfile.close()    
 
 def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):

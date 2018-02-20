@@ -202,7 +202,7 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
             kp, des = brief_descriptor_generator(data, nfeatures)
 
         elif decpt_type == "sift":
-            des = SIFT_descriptor_generator(data, nfeatures)
+            kp, des = SIFT_descriptor_generator(data, nfeatures)
         else:
             print "Algo : " + decpt_type + " is not supported"
 
@@ -210,11 +210,11 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
         res = np.zeros((1, model.get_params()['n_clusters']), dtype=np.float32)
         if des is None:  # if orb cannot get any keypoints
             return res
-
-        des_float = []
-        for i in range(len(des)):  # convert des from int to float to avoid type warning
-            des_float.append(map(float, des[i]))
-        label = model.predict(des_float)
+        des = np.asarray(des, dtype=np.float32)
+        #des_float = []
+        #for i in range(len(des)):  # convert des from int to float to avoid type warning
+        #    des_float.append(map(float, des[i]))
+        label = model.predict(des)
         for value in label:
             res[0, value] += 1.0
         return res / np.sum(res)  # normalized histogram
@@ -239,7 +239,7 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, has_hist
     else:
         imgs_addr = getImageListFromDir(base_dir)
     dist = {}
-    target_hist = generateHist(model, target, 'image', nfeatures, 'orb').astype(np.float32)
+    target_hist = generateHist(model, target, 'image', nfeatures, descriptor_type).astype(np.float32)
     # print np.sum(target_hist)
 
     # calculate distance between target hist and base hists
@@ -249,7 +249,7 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, has_hist
         if has_hist == False:
             print img_addr
             img_gs = cv2.imread(img_addr, '0')
-            hist = generateHist(model, img_gs, 'image', 'orb')
+            hist = generateHist(model, img_gs, 'image', descriptor_type)
         else:
             hist = np.load(img_addr)
         dist[idx] = np.linalg.norm(hist - target_hist)  # eucudian distance

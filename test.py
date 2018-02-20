@@ -109,7 +109,7 @@ if __name__ == '__main__':
                         help="Number of cluster for kmeans")
     parser.add_argument("-d", type=str, default='sift',
                         help="Descriptor Type")
-    parser.add_argument("-m", type=int, default=4,
+    parser.add_argument("-m", type=int, default=3,
                         help="Execution Mode")                                               
     parser.add_argument("--addr", type=str, default='./min_merged_train/',
                         help="training set addr")

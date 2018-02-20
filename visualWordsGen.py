@@ -19,7 +19,7 @@ def main(train_addr, desptype, nfeatures, n_clusters):
     # if descriptors not exist, create them here !
 
     if descpts_addr == '':
-        descpts_addr = "./dscpt_128bits_" + desptype
+        descpts_addr = "./dscpt_32bits_" + desptype
         if os.path.exists(descpts_addr) == False:
             os.mkdir(descpts_addr)
         generator_descriptor(train_addr, descpts_addr, nfeatures, desp_type=desptype)
@@ -66,11 +66,11 @@ def main(train_addr, desptype, nfeatures, n_clusters):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", type=int, default=100,
+    parser.add_argument("-n", type=int, default=50,
                         help="Number of feature point for each image.")
-    parser.add_argument("-c", type=int, default=50,
+    parser.add_argument("-c", type=int, default=25,
                         help="Number of cluster for kmeans")
-    parser.add_argument("-d", type=str, default='sift',
+    parser.add_argument("-d", type=str, default='orb',
                         help="Descriptor Type")                                               
     parser.add_argument("--addr", type=str, default='./min_merged_train/',
                         help="training set addr")                        

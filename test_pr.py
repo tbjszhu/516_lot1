@@ -15,11 +15,11 @@ def main():
     # model_dir = "./save_model/kmeans_50_dim_100.pkl" # pretrained kmeans model for ORB 50 cluster, 100 nfeatures
     # model_dir = "./save_model/kmeans_100.pkl" # pretrained kmeans model for ORB 100 cluster, 100 nfeatures
     # model_dir = "./save_model/kmeans_100_nf_50.pkl" # pretrained kmeans model for ORB 100 cluster, 50 nfeatures
-    model_dir = "./save_model/kmeans_100_nf_0brief.pkl"  # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/kmeans_100_nf_100orb.pkl"  # pretrained kmeans model for Brief 100 cluster
     target_addr = "./test/312_r.png"  # target image to search
-    target_dir = "./test/"  # target dir to search
+    target_dir = "./merged_test/"  # target dir to search
     hist_addr = ''  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
-    descriptor_type = 'brief'
+    descriptor_type = 'orb'
     iteration = False
     nfeatures = 0  # Max quantity of kp, 0 as invalid for brief
 
@@ -57,6 +57,9 @@ def main():
         image_list = getImageListFromDir(target_dir)
         i = 0
 
+
+        """
+        
         csv_file_path = './csv_result'
         csv_file_name = './csv_result/kmeans_' + str(kmeans.get_params()['n_clusters']) + '_nf_' + str(
             nfeatures) + descriptor_type + '.csv'
@@ -108,6 +111,8 @@ def main():
 
         writer.writerow(['Conclusion', str(first_count_global), str(second_count_global), str(note_global)])
         csvfile.close()
+
+        """
 
 
 if __name__ == '__main__':

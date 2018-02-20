@@ -9,18 +9,18 @@ from utils import generator_descriptor
 import os
 def main():
     # definitions #
-    train_addr = './merged_train/' # path where train images lie
+    train_addr = './min_merged_train/' # path where train images lie
     descpts_addr = "" # path where are saved the descriptors, If descripts_addr = '', create them below
     desptype='orb'  # type of descriptors to be generated
     nfeatures = 100 # Max quantity of kp, 0 as invalid for brief
-    pick_nfeatures = 10 # choose top pick_nfeatures
+    pick_nfeatures = 100 # choose top pick_nfeatures
 
     # read or generate local descriptors from the base (saved as numpy array). #
 
     # if descriptors not exist, create them here !
 
     if descpts_addr == '':
-        descpts_addr = "./dscpt_32bits_test_" + desptype
+        descpts_addr = "./dscpt_32bits" + desptype
         if os.path.exists(descpts_addr) == False:
             os.mkdir(descpts_addr)
         generator_descriptor(train_addr, descpts_addr, nfeatures, desp_type=desptype)
@@ -58,11 +58,9 @@ def main():
     # k-means clustering for train_data
     n_clusters = 100
     kmeans = KMeans(n_clusters, random_state=0).fit(train_data)
-    print kmeans.labels_
-    print kmeans.cluster_centers_
     if os.path.exists('./save_model') == False:
         os.mkdir('./save_model')
-    joblib.dump(kmeans, './save_model/opencv3_kmeans_' + str(n_clusters) + '_nf_' + str(nfeatures) + desptype + '.pkl')
+    joblib.dump(kmeans, './save_model/opencv3_kmeans_mini_' + str(n_clusters) + '_nf_' + str(nfeatures) + desptype + '.pkl')
     #joblib.dump(kmeans, './save_model/kmeans_'+str(kmeans.get_params()['n_clusters'])+'.pkl')
 
 main()

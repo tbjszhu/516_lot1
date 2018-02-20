@@ -263,7 +263,9 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
 
 
 def get_class_image_list(target_dir, class_name):
-    l = glob.glob(target_dir + '/' + class_name + '/*/*')
+    if target_dir[-1] != '/':
+        target_dir += '/'
+    l = glob.glob(target_dir + class_name + '/*/*')
     return l
 
 
@@ -378,8 +380,8 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
         score_global_str = []
         Truth = 0        
         for target, target_filename in img_generator(class_image_list): # iteration for each test image from this class 
-            target_filename = target_filename.split('.')[0]
-            target_class = target_filename.split('_')[0]
+            target_filename = target_filename.split('.')[0] #todo documentation
+            target_class = target_filename.split('_')[0]   #todo ducumentation
 
             score_vector = [0] * train_width
             score_total = 0
@@ -387,7 +389,7 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
                 Truth = 1
             else:
                 Truth = 0
-            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist=True)
+            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_name, has_hist=True)
             count = 0
             for key, value in results:
                 score = 1.0 / (value+0.001)

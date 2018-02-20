@@ -114,7 +114,7 @@ if __name__ == '__main__':
     parser.add_argument("--addr", type=str, default='./min_merged_train/',
                         help="training set addr")
     parser.add_argument("--tid", type=int, default='255',
-                        help="test image class id for mode 3")                                                
+                        help="test image class id for mode 4")
 
     args = parser.parse_args()
     

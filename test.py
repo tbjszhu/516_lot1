@@ -11,9 +11,9 @@ import argparse
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv2_kmeans_mini_50_nf_50orb.pkl" # pretrained kmeans model for Brief 100 cluster
-    #target_addr = "./min_merged_test/251/rotation/251_r.png" # target image to search
-    target_addr = "./min_merged_test/252/luminence/252_i150.png"
+    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100orb.pkl" # pretrained kmeans model for Brief 100 cluster
+    target_addr = "./min_merged_test/251/rotation/251_r.png" # target image to search
+    #target_addr = "./min_merged_test/252/luminence/252_i150.png"
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
     # search similar images from base #
@@ -22,6 +22,7 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
 
     # if hist_addr does not exist, generate hists for the dataset #
     if hist_addr == '':
+        has_hist = False
         hist_addr = './hists/'
         if os.path.exists(hist_addr) == False:
             os.mkdir(hist_addr[0:-1])
@@ -37,12 +38,14 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
             filename = addr.split('/')[-1][0:-4]
             np.save(sub_hist_addr + '/' + filename + '_' + descriptor_type, hist)
     else:
-        sub_hist_addr = './hists/' + descriptor_type + '/'
+        has_hist = True
+        sub_hist_addr = hist_addr + '/' + descriptor_type + '/'
 
     if (mode == 1):
         target = cv2.imread(target_addr)
-        results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist=True)
+        results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist)
         count = 1
+        print results
         for key, value in results:
             filename = imgs_list[key].split('/')[-1]
             print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))

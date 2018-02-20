@@ -11,7 +11,7 @@ import argparse
 import cv2
 
 
-def main(train_addr, desptype, nfeatures):
+def main(train_addr, desptype, nfeatures, n_clusters):
     # definitions #[0:nfeatures, :]
     descpts_addr = "" # path where are saved the descriptors, If descripts_addr = '', create them below
     
@@ -54,7 +54,6 @@ def main(train_addr, desptype, nfeatures):
     #print "file with no descriptor", files_no_despt
 
     # k-means clustering for train_data
-    n_clusters = 50
     kmeans = KMeans(n_clusters, random_state=0).fit(train_data)
     if os.path.exists('./save_model') == False:
         os.mkdir('./save_model')
@@ -81,6 +80,7 @@ if __name__ == "__main__":
     train_addr = args.addr # './min_merged_train/' # path where train images lie
     desptype= args.d #'orb'  # type of descriptors to be generated
     nfeatures = args.n # 200 # Max quantity of kp, 0 as invalid for brief
-    print "train_addr : %s, desptype : %s, nfeatures : %d" % (train_addr, desptype, nfeatures)    
-    main(train_addr, desptype, nfeatures)
+    n_clusters = args.c # 200 # Max quantity of kp, 0 as invalid for brief
+    print "train_addr : %s, desptype : %s, nfeatures : %d" % (train_addr, desptype, nfeatures, n_clusters)    
+    main(train_addr, desptype, nfeatures, n_clusters)
 

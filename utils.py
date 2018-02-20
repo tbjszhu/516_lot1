@@ -258,7 +258,7 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
         if class_actual == class_id:
             dictlist.append(temp)
             filename = imgs_addr[key].split('/')[-1]
-            print filename,value
+            #print filename,value
     return dictlist, imgs_addr
 
 

@@ -8,7 +8,7 @@ import os
 
 ### definition ###
 
-data_dir = "/home/yxu/Downloads/png4_col/" # data dir
+data_dir = "/home/yxu/Downloads/png2_col/" # data dir
 
 train_path = "./train_col/" # where to save train images
 test_path = "./test_col/" # where to save test images
@@ -34,7 +34,8 @@ def main():
 
     for cls in sub_dir:
 
-        imgs_addr = getImageListFromDir(cls, 'png')  # all images addr in a subset
+        img_dir = cls + '/*.' + "png"
+        imgs_addr = sorted(glob.glob(img_dir))
 
         # separate images in a subset into train (2/3) and test (2/3)
         nb_train = 2*len(imgs_addr)/3

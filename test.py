@@ -23,7 +23,7 @@ def main():
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = ''  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
     descriptor_type = 'orb'
-    iteration = 4
+    iteration = 3
     nfeatures = 100 # Max quantity of kp, 0 as invalid for brief 
     class_id = 255#target_addr.split('/')[-1].split('_')[0]
        

@@ -240,52 +240,31 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
         imgs_addr = getImageListFromDir(base_dir)
     dist = {}
     target_hist = generateHist(model, target, 'image', nfeatures, descriptor_type).astype(np.float32)
-<<<<<<< Updated upstream
     # print np.sum(target_hist)
-
-=======
-    #print np.sum(target_hist)
     
->>>>>>> Stashed changes
     # calculate distance between target hist and base hists
     for idx, img_addr in enumerate(imgs_addr):
         img_gs = []
         hist = []
         if has_hist == False:
             print img_addr
-<<<<<<< Updated upstream
             img_gs = cv2.imread(img_addr, '0')
             hist = generateHist(model, img_gs, 'image', descriptor_type)
         else:
             hist = np.load(img_addr)
         dist[idx] = np.linalg.norm(hist - target_hist)  # eucudian distance
-=======
-            img_gs = cv2.imread(img_addr,'0')
-            hist = generateHist(model, img_gs, 'image', descriptor_type)
-        else:
-            hist = np.load(img_addr)
-        #dist[idx] = np.sqrt(sum((hist-target_hist)*(hist-target_hist)))
-        dist[idx] = np.linalg.norm(hist-target_hist)  # eucudian distance
->>>>>>> Stashed changes
 
     # get the top rankings
     sorted_d = OrderedDict(sorted(dist.items(), key=lambda x: x[1]))
     dictlist = []
     for key, value in sorted_d.items():
-<<<<<<< Updated upstream
-        temp = [key, value]  # [index, distance]
-        dictlist.append(temp)
-    return dictlist[0:ranking_width], imgs_addr
-=======
         temp = [key, value] # [index, distance]
         class_actual = imgs_addr[key].split('/')[-1].split('_')[0]
         print temp
-        #print class_actual, class_id
         if class_actual == class_id:
             dictlist.append(temp)
         
     return dictlist, imgs_addr
->>>>>>> Stashed changes
 
 
 def get_class_image_list(target_dir, class_name):
@@ -317,22 +296,11 @@ def generate_random_image_list(image_list, class_name, class_start, class_num, n
             break;
     rand_image_list = []
     for item in rand_file_num_list:
-        rand_image_list.append(image_list_temp[int(item) - class_start])
-<<<<<<< Updated upstream
-
-    return rand_image_list
-
-
-def csv_init(csv_file_path, kmeans, nfeatures, class_name, descriptor_type):
-    csv_file_name = csv_file_path + '/kmeans_' + str(kmeans.get_params()['n_clusters']) + '_nf_' + str(
-        nfeatures) + descriptor_type + '_class_' + class_name + '.csv'
-=======
-    
+        rand_image_list.append(image_list_temp[int(item) - class_start])    
     return rand_image_list, same_class_image_count
 
 def csv_init(csv_file_path, kmeans, nfeatures, class_name, class_width, descriptor_type):
     csv_file_name = csv_file_path + '/kmeans_' + str(kmeans.get_params()['n_clusters']) + '_nf_' + str(nfeatures) + descriptor_type + '_class_' + class_name + '.csv'
->>>>>>> Stashed changes
     if os.path.exists(csv_file_path) == False:
         os.mkdir(csv_file_path)
     csvfile = file(csv_file_name, 'wb')
@@ -345,13 +313,6 @@ def csv_init(csv_file_path, kmeans, nfeatures, class_name, class_width, descript
 
 
 def csv_deinit(csvfile, writer, score_global):
-<<<<<<< Updated upstream
-    writer.writerow(['Conclusion'] + score_global)
-    csvfile.close()
-
-
-def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id=-1, has_hist=True):
-=======
     writer.writerow(['Conclusion'] + score_global[:-1] + ["-"] + [score_global[-1]])
     print score_global
     csvfile.close()    
@@ -361,7 +322,6 @@ def pr_image_generate(pr_list):
     
 def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id = -1, has_hist=True):
     
->>>>>>> Stashed changes
     image_list = getImageListFromDir(target_dir)
     class_list = []
     dir_list = glob.glob(target_dir + '/*')
@@ -380,20 +340,6 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
         else:
             print "class_id: %d not in class_list" % (class_id)
 
-<<<<<<< Updated upstream
-    for class_name in class_list:  # iteration for each class
-        class_image_list = get_class_image_list(target_dir, class_name)
-        random_image_list = generate_random_image_list(image_list, class_name, class_start, class_num, 5)
-        class_image_list.extend(random_image_list)  # joint two lists together
-
-        csv_file_path = './pr_csv'
-        csvfile, writer = csv_init(csv_file_path, kmeans, nfeatures, class_name, descriptor_type)
-        score_global = [0] * (ranking_width + 1)
-
-        for target, target_filename in img_generator(
-                class_image_list):  # iteration for each test image from this class
-
-=======
     pr_list = []
     for class_name in class_list: # iteration for each class
         class_image_list = get_class_image_list(target_dir, class_name)
@@ -406,23 +352,16 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
         score_global_str = []
         Truth = 0        
         for target, target_filename in img_generator(class_image_list): # iteration for each test image from this class 
-            
->>>>>>> Stashed changes
             target_filename = target_filename.split('.')[0]
             target_class = target_filename.split('_')[0]
 
             score_vector = [0] * train_width
             score_total = 0
-<<<<<<< Updated upstream
-            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type,
-                                                has_hist=True)
-=======
             if target_class == class_name:
                 Truth = 1
             else:
                 Truth = 0
             results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist=True)
->>>>>>> Stashed changes
             count = 0
             for key, value in results:
                 if value == 0:
@@ -442,9 +381,5 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
             pr_list.append([str(target_filename), Truth, score_total])  
             score_global[-1] += score_total
         score_global_str = map(str, score_global)
-<<<<<<< Updated upstream
-        csv_deinit(csvfile, writer, score_global_str)
-=======
         csv_deinit(csvfile, writer, score_global_str)
     pr_image_generate(pr_list)
->>>>>>> Stashed changes

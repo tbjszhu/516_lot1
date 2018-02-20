@@ -11,25 +11,11 @@ import argparse
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-    base_dir = "./min_merged_train/" # base dir for search
-    model_dir = "./save_model/opencv3_kmeans_mini_100_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/cv2_kmeans_mini_50_nf_50orb.pkl" # pretrained kmeans model for Brief 100 cluster
     #target_addr = "./min_merged_test/251/rotation/251_r.png" # target image to search
     target_addr = "./min_merged_test/252/luminence/252_i150.png"
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'  # generated histograms for the dataset, if hist_addr = '', we will generate hists below
-    descriptor_type = 'sift'
-    iteration = 3
-    nfeatures = 100 # Max quantity of kp, 0 as invalid for brief 
-    class_id = 255 #target_addr.split('/')[-1].split('_')[0]
-<<<<<<< Updated upstream
-       
-=======
-
->>>>>>> Stashed changes
     # search similar images from base #
     kmeans = joblib.load(model_dir) # load pretrained kmeans model
     print ('kmeans parameters', kmeans.get_params())    
@@ -141,5 +127,5 @@ if __name__ == '__main__':
     mode = args.m
     class_id = args.tid # 255 #target_addr.split('/')[-1].split('_')[0]    
     print "train_addr : %s, desptype : %s, nfeatures : %d" % (train_addr, descriptor_type, nfeatures)    
-    main(train_addr, mode, descriptor_type, nfeatures, pick_nfeatures, class_id)
+    main(train_addr, mode, descriptor_type, nfeatures, class_id)
     

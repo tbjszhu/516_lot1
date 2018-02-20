@@ -7,18 +7,9 @@ from sklearn.cluster import KMeans
 from sklearn.externals import joblib
 from utils import generator_descriptor
 import os
-<<<<<<< Updated upstream
-def main():
-    # definitions #
-    train_addr = './min_merged_train/' # path where train images lie
-    descpts_addr = "" # path where are saved the descriptors, If descripts_addr = '', create them below
-    desptype='orb'  # type of descriptors to be generated
-    nfeatures = 50 # Max quantity of kp, 0 as invalid for brief
-    pick_nfeatures = 50 # choose top pick_nfeatures
-=======
 import argparse
 import cv2
->>>>>>> Stashed changes
+
 
 def main(train_addr, desptype, nfeatures):
     # definitions #[0:nfeatures, :]

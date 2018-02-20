@@ -92,14 +92,6 @@ def brief_descriptor_generator(data, nfeatures):
     # compute the descriptors with BRIEF
     kp, des = brief.compute(data, kp)
     
-    if des is not None :
-<<<<<<< Updated upstream
-        pass
-         #print "des shape", des.shape
-
-=======
-        print "descriptor shape", des.shape
->>>>>>> Stashed changes
     return kp, des
 
 

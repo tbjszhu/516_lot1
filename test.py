@@ -11,7 +11,7 @@ import argparse
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv3_kmeans_mini_25_nf_50orb.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100brief.pkl" # pretrained kmeans model for Brief 100 cluster
     target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
     #target_addr = "./min_merged_test/252/luminence/252_i150.png"
     target_dir = "./min_merged_test/" # target dir to search
@@ -22,17 +22,22 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
 
     # if hist_addr does not exist, generate hists for the dataset #
     if os.path.exists(hist_addr) == False:
+        print "Creating Histogram..."
         os.makedirs(hist_addr)
         imgs_addr = getImageListFromDir(train_addr)
         for addr in imgs_addr:
             #print addr
-            img = cv2.imread(addr)
-            img_gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            if descriptor_type == 'brief':
+                img_gs = cv2.imread(addr, 0)
+            else:
+                img = cv2.imread(addr)
+                img_gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             hist = generateHist(kmeans, img_gs, 'image', nfeatures, descriptor_type)
             filename = addr.split('/')[-1][0:-4]
             np.save(hist_addr + '/' + filename + '_' + descriptor_type, hist)
         has_hist = True
     else:
+        print "Has Histogram"
         has_hist = True
 
     if (mode == 1):
@@ -113,7 +118,7 @@ if __name__ == '__main__':
                         help="Execution Mode")                                               
     parser.add_argument("--addr", type=str, default='./min_merged_train/',
                         help="training set addr")
-    parser.add_argument("--tid", type=int, default=255,
+    parser.add_argument("--tid", type=str, default=255,
                         help="test image class id for mode 4")
 
     args = parser.parse_args()

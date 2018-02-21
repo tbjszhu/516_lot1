@@ -48,7 +48,7 @@ def img_generator(img_list):
     while len(img_list) > 0:
         f1 = img_list.pop(0)
         print "read img: ", f1.split('/')[-1]
-        img = cv2.imread(f1)
+        img = cv2.imread(f1, 0) # 0 is needed for brief discriptor
         yield (img, f1.split('/')[-1])
 
 
@@ -197,7 +197,7 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
             kp, des = brief_descriptor_generator(data, nfeatures)
 
         elif decpt_type == "sift":
-            kps, des = SIFT_descriptor_generator(data, nfeatures)
+            kp, des = SIFT_descriptor_generator(data, nfeatures)
         else:
             print "Algo : " + decpt_type + " is not supported"
 

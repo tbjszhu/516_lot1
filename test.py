@@ -8,10 +8,11 @@ import numpy as np
 import os
 import csv
 import argparse
+import shutil
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100brief.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/cv3_kmeans_mini_50_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
     target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
     #target_addr = "./min_merged_test/252/luminence/252_i150.png"
     target_dir = "./min_merged_test/" # target dir to search
@@ -105,14 +106,15 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
         pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, class_id)
     else:
         print "mode error should be [1~3]"
+    shutil.rmtree(hist_addr) # remove hists
                 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", type=int, default=50,
+    parser.add_argument("-n", type=int, default=100,
                         help="Number of feature point for each image.")
-    parser.add_argument("-c", type=int, default=25,
+    parser.add_argument("-c", type=int, default=50,
                         help="Number of cluster for kmeans")
-    parser.add_argument("-d", type=str, default='orb',
+    parser.add_argument("-d", type=str, default='sift',
                         help="Descriptor Type")
     parser.add_argument("-m", type=int, default=3,
                         help="Execution Mode")                                               

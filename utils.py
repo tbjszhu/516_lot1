@@ -13,6 +13,7 @@ from sklearn.metrics import auc
 
 # Read images/masks from a directory
 train_width = 10 # the number of train images for each class
+opposite_image_num = 10 # the number of opposite images for each class
 
 
 def getImageListFromDir(img_dir, filetype='png'):
@@ -370,7 +371,7 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
     for class_name in class_list: # iteration for each class
         pr_list = []
         class_image_list = get_class_image_list(target_dir, class_name)
-        random_image_list, class_width = generate_random_image_list(image_list, class_name, class_start, class_num, 5)
+        random_image_list, class_width = generate_random_image_list(image_list, class_name, class_start, class_num, opposite_image_num)
         class_image_list.extend(random_image_list) # joint two lists together
 
         csv_file_path = './pr_csv'

@@ -321,7 +321,6 @@ def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):
     :param kmeans : kmeans model
     :return: None
     """
-
     y_test =  [] # label
     y_score =  [] # prediction
     cls = pr_list[0][0].split('_')[0]
@@ -347,7 +346,7 @@ def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):
         os.mkdir('./pr_figures')
     plt.savefig('./pr_figures/'+"class_"+str(cls)+' '+str(descriptor_type)+' k'+str(kmeans.get_params()['n_clusters'])+
                 ' nf'+str(nfeatures)+'.png')
-    
+    plt.close() # do not forget to close your figure after savefig, else the figure will overlap.
 def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id = -1, has_hist=True):
     
     image_list = getImageListFromDir(target_dir)

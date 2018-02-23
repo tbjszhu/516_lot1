@@ -12,7 +12,7 @@ import cv2
 
 
 def main(train_addr, desptype, nfeatures, n_clusters):
-    # definitions #[0:nfeatures, :]
+    # definitions #
     descpts_addr = "" # path where are saved the descriptors, If descripts_addr = '', create them below
     
     # read or generate local descriptors from the base (saved as numpy array). #
@@ -30,11 +30,9 @@ def main(train_addr, desptype, nfeatures, n_clusters):
 
     # each npy file has all local descriptors for an image
     descpts_list = glob.glob(descpts_addr)
-    #print descpts_list
-
     # generate train data for k means clustering of shape [num of descriptors, dimension of descriptor]
     train_data = None
-    files_no_despt = []
+    files_no_despt = []  # images have no key points that can be detected
     for strr in descpts_list:
         if strr.find('kp') == -1: # not keypoints array
             if np.load(strr).shape == ():
@@ -51,7 +49,7 @@ def main(train_addr, desptype, nfeatures, n_clusters):
                 files_no_despt.append(strr)  # images that we cannot extract keypoints and descriptors
 
     print "train size ", train_data.shape
-    #print "file with no descriptor", files_no_despt
+    print files_no_despt
 
     # k-means clustering for train_data
     kmeans = KMeans(n_clusters, random_state=0).fit(train_data)
@@ -60,11 +58,13 @@ def main(train_addr, desptype, nfeatures, n_clusters):
     if cv2.__version__[0] == '3':
         prefix = 'cv3'
     else:
-        prefix = 'cv2'    
+        prefix = 'cv2'
+    # save k-means model for further use
     joblib.dump(kmeans, './save_model/' + prefix + '_kmeans_mini_' + str(n_clusters) + '_nf_' + str(nfeatures) + desptype + '.pkl')
-    #joblib.dump(kmeans, './save_model/kmeans_'+str(kmeans.get_params()['n_clusters'])+'.pkl')
+
 
 if __name__ == "__main__":
+    # parameters entered by command lines
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", type=int, default=50,
                         help="Number of feature point for each image.")

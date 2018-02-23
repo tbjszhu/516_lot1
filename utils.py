@@ -348,6 +348,7 @@ def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):
     plt.savefig('./pr_figures/'+"class_"+str(cls)+' '+str(descriptor_type)+' k'+str(kmeans.get_params()['n_clusters'])+
                 ' nf'+str(nfeatures)+'.png')
     plt.close() # do not forget to close your figure after savefig, else the figure will overlap.
+
 def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id = -1, has_hist=True):
     
     image_list = getImageListFromDir(target_dir)
@@ -370,7 +371,9 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
 
     for class_name in class_list: # iteration for each class
         pr_list = []
-        class_image_list = get_class_image_list(target_dir, class_name)
+        class_image_list = get_class_image_list(target_dir, class_name)  # positive examples
+
+        # negative examples
         random_image_list, class_width = generate_random_image_list(image_list, class_name, class_start, class_num, opposite_image_num)
         class_image_list.extend(random_image_list) # joint two lists together
 
@@ -379,9 +382,9 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
         score_global = [0] * (train_width + 1)
         score_global_str = []
         Truth = 0        
-        for target, target_filename in img_generator(class_image_list): # iteration for each test image from this class 
-            target_filename = target_filename.split('.')[0] #todo documentation
-            target_class = target_filename.split('_')[0]   #todo ducumentation
+        for target, target_filename in img_generator(class_image_list):  # iteration for each test image from this class
+            target_filename = target_filename.split('.')[0]
+            target_class = target_filename.split('_')[0]   # current file class
 
             score_vector = [0] * train_width
             score_total = 0
@@ -401,7 +404,7 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
                     score_total += score
                 count += 1
             score_vector_str = map(str, score_vector)
-            writer.writerow([str(target_filename)] + score_vector + [str(Truth), str(score_total)])
+            writer.writerow([str(target_filename)] + score_vector_str + [str(Truth), str(score_total)])
             pr_list.append([str(target_filename), Truth, score_total])  
             score_global[-1] += score_total
         score_global_str = map(str, score_global)

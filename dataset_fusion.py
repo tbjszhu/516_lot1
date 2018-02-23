@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 # this code is for merging two datasets into one #
-import cv2
-from utils import getImageListFromDir
 import glob
-import random
 import os
 from shutil import copyfile
 

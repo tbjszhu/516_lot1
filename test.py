@@ -42,18 +42,21 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
         has_hist = True
 
     # test for one image #
-    if mode == 1:
-        target = cv2.imread(target_addr)
-        results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, class_id, has_hist)
+    if (mode == 1):
+        if descriptor_type == 'brief':
+            target = cv2.imread(target_addr, 0) 
+        else:   
+            target = cv2.imread(target_addr)
+        results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_id, has_hist)
         count = 1
-        print results
         for key, value in results:
             filename = imgs_list[key].split('/')[-1]
             print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
             count += 1
-
-    # mode for debug, try to find self rotated image from the database; rank the result; store in a csv file #
-    elif mode == 2:
+            if count >= 10:
+                break;
+            
+    elif (mode == 2): # try to find self rotated image from the database; rank the result; store in a csv file
         image_list = getImageListFromDir(target_dir)
         i = 0
         
@@ -72,7 +75,8 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
         for target, target_filename in img_generator(image_list):
             target_filename = target_filename.split('.')[0]
             target_fileno = target_filename.split('_')[0]
-            results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, has_hist=True)
+            
+            results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, mode, has_hist=True)
             
             note = 10
             note_total = 0 # note for one image

@@ -222,7 +222,7 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
 
 # search similar images of a given target (gs image) in terms of distance of hists.
 
-def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id = -1, has_hist = False):
+def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, mode, class_id = -1, has_hist = False):
     """
     :param base_dir: search base of images
     :param target: target image numpy grayscale image
@@ -256,10 +256,13 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, class_id
     for key, value in sorted_d.items():
         temp = [key, value] # [index, distance]
         class_actual = imgs_addr[key].split('/')[-1].split('_')[0]
-        if class_actual == str(class_id):
+        if mode != 1:
+            if class_actual == str(class_id):
+                dictlist.append(temp)
+                filename = imgs_addr[key].split('/')[-1]
+                #print filename,value
+        else:
             dictlist.append(temp)
-            filename = imgs_addr[key].split('/')[-1]
-            #print filename,value
     return dictlist, imgs_addr
 
 
@@ -392,7 +395,7 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
                 Truth = 1
             else:
                 Truth = 0
-            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, class_name, has_hist=True)
+            results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_name, has_hist=True)
             count = 0
             for key, value in results:
                 score = 1.0 / (value+0.001)

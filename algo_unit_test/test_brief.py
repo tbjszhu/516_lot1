@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
-img = cv2.imread('test5.png',0)
+img = cv2.imread('demo.png',0)
 
 # Initiate STAR detector
 #star = cv2.FeatureDetector_create("STAR")
@@ -27,3 +27,4 @@ print des.shape
 
 img2 = cv2.drawKeypoints(img, kp, None, color=(0,255,0), flags=0)
 plt.imshow(img2), plt.show()
+cv2.imwrite( "demo_brief"+'.png', img2);

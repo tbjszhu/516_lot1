@@ -18,7 +18,7 @@ def main (path, descpt_tpye, save_path):
         kp,_ = brief_descriptor_generator(img, 10000)
 
     print ("{} key points are detected.".format(len(kp)))
-    img = cv2.drawKeypoints(img, kp, img)
+    img = cv2.drawKeypoints(img, kp, img, color=(0,255,0))
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     plt.imshow(img)
     plt.axis("off")

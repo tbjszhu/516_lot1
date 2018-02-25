@@ -13,7 +13,7 @@ import shutil
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100brief.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100orb.pkl" # pretrained kmeans model for Brief 100 cluster
     #target_addr = "./min_merged_test/335/rotation/335_r.png" # target image to search
     target_addr = "./min_merged_test/335/luminence/335_i170.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                         help="Number of feature point for each image.")
     parser.add_argument("-c", type=int, default=50,
                         help="Number of cluster for kmeans")
-    parser.add_argument("-d", type=str, default='sift',
+    parser.add_argument("-d", type=str, default='orb',
                         help="Descriptor Type")
     parser.add_argument("-m", type=int, default=1,
                         help="Execution Mode")                                               

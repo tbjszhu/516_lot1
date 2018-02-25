@@ -27,11 +27,11 @@ def main (path, descpt_tpye, save_path):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--p", type=str, default='./algo_unit_test/demo.png',
+    parser.add_argument("--p", type=str, default='./min_merged_test/251/rotation/251_c.png',
                         help="image path")
     parser.add_argument("-d", type=str, default='sift',
                         help="descriptor type")
-    parser.add_argument("--s", type=str, default='./rapport/draw_output.png',
+    parser.add_argument("--s", type=str, default='./rapport/draw_output_2.png',
                         help="save path")
     args = parser.parse_args()
 

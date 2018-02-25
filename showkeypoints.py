@@ -7,7 +7,6 @@ from scipy.misc import imsave
 
 def main (path, descpt_tpye, save_path):
     img = cv2.imread(path)
-    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     kp = []
     if descpt_tpye == 'orb':
         kp,_ = orb_descriptor_generator(img, 10000)
@@ -20,6 +19,7 @@ def main (path, descpt_tpye, save_path):
 
     print ("{} key points are detected.".format(len(kp)))
     img = cv2.drawKeypoints(img, kp, img)
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     plt.imshow(img)
     plt.axis("off")
     plt.show()

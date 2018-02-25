@@ -13,7 +13,8 @@ import shutil
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv2_kmeans_mini_50_nf_200orb.pkl" # pretrained kmeans model for Brief 100 cluster
+
+    model_dir = "./save_model/cv3_kmeans_mini_100_nf_50orb.pkl" # pretrained kmeans model for Brief 100 cluster
     target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'+descriptor_type # generated histograms for the dataset
@@ -121,13 +122,13 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", type=int, default=100,
+    parser.add_argument("-n", type=int, default=50,
                         help="Number of feature point for each image.")
-    parser.add_argument("-c", type=int, default=50,
+    parser.add_argument("-c", type=int, default=100,
                         help="Number of cluster for kmeans")
-    parser.add_argument("-d", type=str, default='sift',
+    parser.add_argument("-d", type=str, default='orb',
                         help="Descriptor Type")
-    parser.add_argument("-m", type=int, default=3,
+    parser.add_argument("-m", type=int, default=1,
                         help="Execution Mode")                                               
     parser.add_argument("--addr", type=str, default='./min_merged_train/',
                         help="training set addr")

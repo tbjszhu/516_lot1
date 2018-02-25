@@ -1,0 +1,37 @@
+image: 251_c
+jzhu@pc-df-912:~/F4B516_lot1$ python test.py  -n 100 -c 50 -d brief -m 1
+train_addr : ./min_merged_train/, desptype : brief, nfeatures : 100
+('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
+Histograms exist
+NO. 1 is: 260_l_brief.npy distance : 0.279699
+NO. 2 is: 304_i180_brief.npy distance : 0.323942
+NO. 3 is: 304_i170_brief.npy distance : 0.327981
+NO. 4 is: 309_c_brief.npy distance : 0.332916
+NO. 5 is: 285_i110_brief.npy distance : 0.334772
+NO. 6 is: 285_i170_brief.npy distance : 0.335062
+NO. 7 is: 285_i180_brief.npy distance : 0.340979
+NO. 8 is: 340_i130_brief.npy distance : 0.341565
+NO. 9 is: 300_l_brief.npy distance : 0.341888
+NO. 10 is: 285_i190_brief.npy distance : 0.34215
+
+image: 251_i120
+jzhu@pc-df-912:~/F4B516_lot1$ python test.py  -n 100 -c 50 -d brief -m 1
+train_addr : ./min_merged_train/, desptype : brief, nfeatures : 100
+('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
+Histograms exist
+Erreur de segmentation
+jzhu@pc-df-912:~/F4B516_lot1$ python test.py  -n 100 -c 50 -d brief -m 1
+train_addr : ./min_merged_train/, desptype : brief, nfeatures : 100
+('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
+Histograms exist
+NO. 1 is: 251_i210_brief.npy distance : 0.239046
+NO. 2 is: 319_i210_brief.npy distance : 0.282451
+NO. 3 is: 251_i250_brief.npy distance : 0.282843
+NO. 4 is: 319_i190_brief.npy distance : 0.29034
+NO. 5 is: 319_c_brief.npy distance : 0.291548
+NO. 6 is: 251_i180_brief.npy distance : 0.298142
+NO. 7 is: 319_i120_brief.npy distance : 0.3
+NO. 8 is: 251_i190_brief.npy distance : 0.312984
+NO. 9 is: 251_i110_brief.npy distance : 0.316228
+NO. 10 is: 251_i130_brief.npy distance : 0.316228
+

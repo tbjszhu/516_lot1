@@ -1,0 +1,32 @@
+image: 335_r
+jzhu@pc-df-912:~/F4B516_lot1$ python test.py  -n 100 -c 50 -d brief -m 1
+train_addr : ./min_merged_train/, desptype : brief, nfeatures : 100
+('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
+Histograms exist
+NO. 1 is: 335_i130_brief.npy distance : 0.115527
+NO. 2 is: 335_c_brief.npy distance : 0.122034
+NO. 3 is: 335_i210_brief.npy distance : 0.122202
+NO. 4 is: 335_i150_brief.npy distance : 0.122646
+NO. 5 is: 335_i120_brief.npy distance : 0.123259
+NO. 6 is: 335_i250_brief.npy distance : 0.126287
+NO. 7 is: 335_i110_brief.npy distance : 0.127782
+NO. 8 is: 335_i160_brief.npy distance : 0.127889
+NO. 9 is: 335_i140_brief.npy distance : 0.130794
+NO. 10 is: 329_c_brief.npy distance : 0.14134
+
+image: 335_i170
+jzhu@pc-df-912:~/F4B516_lot1$ python test.py  -n 100 -c 50 -d brief -m 1
+train_addr : ./min_merged_train/, desptype : brief, nfeatures : 100
+('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
+Histograms exist
+NO. 1 is: 335_i150_brief.npy distance : 0.0398882
+NO. 2 is: 335_i160_brief.npy distance : 0.0444501
+NO. 3 is: 335_i130_brief.npy distance : 0.0529692
+NO. 4 is: 335_i210_brief.npy distance : 0.0552022
+NO. 5 is: 335_i250_brief.npy distance : 0.057333
+NO. 6 is: 335_i120_brief.npy distance : 0.0655501
+NO. 7 is: 335_i110_brief.npy distance : 0.0689057
+NO. 8 is: 335_i140_brief.npy distance : 0.0898992
+NO. 9 is: 335_c_brief.npy distance : 0.0947382
+NO. 10 is: 335_l_brief.npy distance : 0.114341
+

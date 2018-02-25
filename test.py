@@ -13,9 +13,9 @@ import shutil
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-
-    model_dir = "./save_model/cv3_kmeans_mini_50_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
-    target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
+    model_dir = "./save_model/cv2_kmeans_mini_50_nf_100brief.pkl" # pretrained kmeans model for Brief 100 cluster
+    #target_addr = "./min_merged_test/335/rotation/335_r.png" # target image to search
+    target_addr = "./min_merged_test/335/luminence/335_i170.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'+descriptor_type # generated histograms for the dataset
 

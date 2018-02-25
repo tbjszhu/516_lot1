@@ -13,7 +13,7 @@ import shutil
 
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
-    model_dir = "./save_model/cv3_kmeans_mini_50_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/cv2_kmeans_mini_50_nf_200orb.pkl" # pretrained kmeans model for Brief 100 cluster
     target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'+descriptor_type # generated histograms for the dataset
@@ -105,11 +105,11 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
 
     # mode for generate results for all types of objects in test set, generate for all class #
     elif mode == 3:
-        pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type)
+        pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, mode)
 
     # mode for generating result for a given class in the test set #
     elif mode == 4:
-        pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, class_id)
+        pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, mode, class_id)
 
     # mode error #
     else:

@@ -15,6 +15,8 @@ print dst.shape
 #result is dilated for marking the corners, not important
 dst = cv2.dilate(dst,None)
 
+print dst
+
 # Threshold for an optimal value, it may vary depending on the image.
 img[dst>0.01*dst.max()]=[0,0,255]
 

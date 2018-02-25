@@ -352,7 +352,7 @@ def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):
                 ' nf'+str(nfeatures)+'.png')
     plt.close() # do not forget to close your figure after savefig, else the figure will overlap.
 
-def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, class_id = -1, has_hist=True):
+def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_type, mode, class_id = -1, has_hist=True):
     
     image_list = getImageListFromDir(target_dir)
     class_list = []

@@ -14,7 +14,7 @@ kp = orb.detect(img,None)
 
 # compute the descriptors with ORB
 kp, des = orb.compute(img, kp)
-
+print des.shape
 # draw only keypoints location,not size and orientation
 img2 = cv2.drawKeypoints(img,kp,color=(0,255,0), flags=0)
 plt.imshow(img2),plt.show()

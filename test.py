@@ -14,7 +14,7 @@ import shutil
 def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # definitions #
 
-    model_dir = "./save_model/cv3_kmeans_mini_100_nf_50orb.pkl" # pretrained kmeans model for Brief 100 cluster
+    model_dir = "./save_model/cv3_kmeans_mini_50_nf_100sift.pkl" # pretrained kmeans model for Brief 100 cluster
     target_addr = "./min_merged_test/251/rotation/251_c.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'+descriptor_type # generated histograms for the dataset
@@ -54,8 +54,8 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
             filename = imgs_list[key].split('/')[-1]
             print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
             count += 1
-            if count >= 10:
-                break;
+            if count > 10:
+                break
             
     elif (mode == 2): # try to find self rotated image from the database; rank the result; store in a csv file
         image_list = getImageListFromDir(target_dir)
@@ -117,16 +117,16 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
         print "mode error should be [1~3]"
 
     # remove hists after usage #
-    shutil.rmtree(hist_addr)
+    #shutil.rmtree(hist_addr)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", type=int, default=50,
+    parser.add_argument("-n", type=int, default=100,
                         help="Number of feature point for each image.")
-    parser.add_argument("-c", type=int, default=100,
+    parser.add_argument("-c", type=int, default=50,
                         help="Number of cluster for kmeans")
-    parser.add_argument("-d", type=str, default='orb',
+    parser.add_argument("-d", type=str, default='sift',
                         help="Descriptor Type")
     parser.add_argument("-m", type=int, default=1,
                         help="Execution Mode")                                               

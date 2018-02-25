@@ -17,7 +17,7 @@ def main (path, descpt_tpye, save_path):
     img = cv2.imread(path)
     if descpt_tpye == 'brief':
         kp,_ = brief_descriptor_generator(img, 10000)
-        
+
     print ("{} key points are detected.".format(len(kp)))
     img = cv2.drawKeypoints(img, kp, img)
     plt.imshow(img)

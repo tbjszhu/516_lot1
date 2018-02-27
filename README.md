@@ -5,7 +5,7 @@ todo list:<br>
 (3) generate histogramme for each image in the base, save the histogrammes <br> 
 (4) given a new test image, calculate hist, compare it to all the hists in the base <br> 
 (5) get the ranking of closest hist <br> 
-(6) changes parameters and run tests  <-- we are now here. <br>
+(6) changes parameters and run tests <br>
 
 
 Guide to use: <br>

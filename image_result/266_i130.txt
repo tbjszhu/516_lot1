@@ -1,0 +1,46 @@
+train_addr : ./min_merged_train/, desptype : orb, nfeatures : 100
+treating image : ./min_merged_test/266/luminence/266_i130.png
+('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
+Histograms exist
+NO. 1 is: 266_i160_orb.npy distance : 0.0606061
+./min_merged_train/266/luminence/266_i160.png
+NO. 2 is: 266_i120_orb.npy distance : 0.0625139
+./min_merged_train/266/luminence/266_i120.png
+NO. 3 is: 266_i110_orb.npy distance : 0.0701651
+./min_merged_train/266/luminence/266_i110.png
+NO. 4 is: 266_i170_orb.npy distance : 0.0701723
+./min_merged_train/266/luminence/266_i170.png
+NO. 5 is: 266_i150_orb.npy distance : 0.076927
+./min_merged_train/266/luminence/266_i150.png
+NO. 6 is: 266_i180_orb.npy distance : 0.0914685
+./min_merged_train/266/luminence/266_i180.png
+NO. 7 is: 266_i140_orb.npy distance : 0.0924247
+./min_merged_train/266/luminence/266_i140.png
+NO. 8 is: 266_i250_orb.npy distance : 0.115169
+./min_merged_train/266/luminence/266_i250.png
+NO. 9 is: 266_l_orb.npy distance : 0.132012
+./min_merged_train/266/rotation/266_l.png
+NO. 10 is: 266_r_orb.npy distance : 0.153284
+./min_merged_train/266/rotation/266_r.png
+NO. 11 is: 325_i230_orb.npy distance : 0.168108
+./min_merged_train/325/luminence/325_i230.png
+NO. 12 is: 325_i190_orb.npy distance : 0.1731
+./min_merged_train/325/luminence/325_i190.png
+NO. 13 is: 328_r_orb.npy distance : 0.173645
+./min_merged_train/328/rotation/328_r.png
+NO. 14 is: 303_r_orb.npy distance : 0.17579
+./min_merged_train/303/rotation/303_r.png
+NO. 15 is: 325_i210_orb.npy distance : 0.179112
+./min_merged_train/325/luminence/325_i210.png
+NO. 16 is: 321_i180_orb.npy distance : 0.181149
+./min_merged_train/321/luminence/321_i180.png
+NO. 17 is: 312_l_orb.npy distance : 0.181628
+./min_merged_train/312/rotation/312_l.png
+NO. 18 is: 325_i180_orb.npy distance : 0.1817
+./min_merged_train/325/luminence/325_i180.png
+NO. 19 is: 267_i140_orb.npy distance : 0.181939
+./min_merged_train/267/luminence/267_i140.png
+NO. 20 is: 321_i120_orb.npy distance : 0.183377
+./min_merged_train/321/luminence/321_i120.png
+NO. 21 is: 303_i210_orb.npy distance : 0.183485
+./min_merged_train/303/luminence/303_i210.png

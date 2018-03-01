@@ -111,10 +111,35 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # mode for generating result for a given class in the test set #
     elif mode == 4:
         pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, mode, class_id)
+        
+    elif mode == 5:
+        if descriptor_type == 'brief':
+            target = cv2.imread(target_addr, 0) 
+        else:   
+            target = cv2.imread(target_addr)
+        results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_id, has_hist)
 
+        ax = [0] * 6
+        f,((ax[0],ax[1]),(ax[2],ax[3]), (ax[4],ax[5])) = plt.subplots(3,2)
+        original = cv2.imread(target_addr, 0) 
+        ax[0].set_title("Original")
+        ax[0].imshow(original)
+        ax[0].set_axis_off()
+        count = 1                
+        for key, value in results:
+            filename = imgs_list[key].split('/')[-1]
+            fileaddr = imgs_list[key]
+            print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
+            ranking_image = cv2.imread(fileaddr, 0)
+            ax[count].set_title("Original")
+            ax[count].imshow(ranking_image)
+            ax[count].set_axis_off()            
+            count += 1
+            if count > 4:
+                break
     # mode error #
     else:
-        print "mode error should be [1~3]"
+        print "mode error should be [1~5]"
 
     # remove hists after usage #
     #shutil.rmtree(hist_addr)

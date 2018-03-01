@@ -12,12 +12,11 @@ import cv2
 
 
 def main(train_addr, desptype, nfeatures, n_clusters):
-    # definitions #
-    descpts_addr = "" # path where are saved the descriptors, If descripts_addr = '', create them below
+
+    descpts_addr = "" # path where are saved the descriptors
     
     # read or generate local descriptors from the base (saved as numpy array). #
-    # if descriptors not exist, create them here !
-
+    # if descriptors not exist, create them here
     if descpts_addr == '':
         descpts_addr = "./dscpt_32bits_" + desptype
         if os.path.exists(descpts_addr) == False:
@@ -30,9 +29,10 @@ def main(train_addr, desptype, nfeatures, n_clusters):
 
     # each npy file has all local descriptors for an image
     descpts_list = glob.glob(descpts_addr)
+    
     # generate train data for k means clustering of shape [num of descriptors, dimension of descriptor]
     train_data = None
-    files_no_despt = []  # images have no key points that can be detected
+    files_no_despt = []  # image list that have no key points that can be detected(too dark)
     for strr in descpts_list:
         if strr.find('kp') == -1: # not keypoints array
             if np.load(strr).shape == ():
@@ -59,6 +59,7 @@ def main(train_addr, desptype, nfeatures, n_clusters):
         prefix = 'cv3'
     else:
         prefix = 'cv2'
+        
     # save k-means model for further use
     joblib.dump(kmeans, './save_model/' + prefix + '_kmeans_mini_' + str(n_clusters) + '_nf_' + str(nfeatures) + desptype + '.pkl')
 
@@ -79,8 +80,8 @@ if __name__ == "__main__":
     
     train_addr = args.addr # './min_merged_train/' # path where train images lie
     desptype= args.d #'orb'  # type of descriptors to be generated
-    nfeatures = args.n # 200 # Max quantity of kp, 0 as invalid for brief
-    n_clusters = args.c # 200 # Max quantity of kp, 0 as invalid for brief
+    nfeatures = args.n # Max quantity of kp
+    n_clusters = args.c # Quantity of cluste
     print "train_addr : %s, desptype : %s, nfeatures : %d, nclusters : %d " % (train_addr, desptype, nfeatures, n_clusters)
     main(train_addr, desptype, nfeatures, n_clusters)
 

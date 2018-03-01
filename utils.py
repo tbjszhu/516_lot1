@@ -23,7 +23,7 @@ def getImageListFromDir(img_dir, filetype='png'):
     :return: list of images, list
     """
     img_dir = img_dir + '/*/*/' + '*.' + filetype
-    l = sorted(glob.glob(img_dir))  # ./merged_train/999/rotation/999_r.png
+    l = sorted(glob.glob(img_dir))  
     return l
 
 
@@ -35,7 +35,7 @@ def getHistListFromDir(img_dir):
     """
     filetype = 'npy'
     img_dir = img_dir + '/*.' + filetype
-    l = sorted(glob.glob(img_dir))  # ./merged_train/999/rotation/999_r.png
+    l = sorted(glob.glob(img_dir))
     return l
 
 
@@ -49,7 +49,7 @@ def img_generator(img_list):
     while len(img_list) > 0:
         f1 = img_list.pop(0)
         print "read img: ", f1.split('/')[-1]
-        img = cv2.imread(f1, 0) # 0 is needed for brief discriptor
+        img = cv2.imread(f1, 0) 
         yield (img, f1.split('/')[-1])
 
 
@@ -102,18 +102,13 @@ def SIFT_descriptor_generator(data, nfeatures):
     :param feature_point_quantity: MAX feature point quantity
     :return: keypoint_list, descriptor_list
     """
-    """
-    gray = cv2.cvtColor(data, cv2.COLOR_BGR2GRAY)
-
-    gray = np.float32(gray)
-    dst = cv2.cornerHarris(gray, 2, 3, 0.04)
-    
-    """
+    # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create(nfeatures=nfeatures)
+    
+    # compute the descriptors with SIFT
     kps, descs = sift.detectAndCompute(data,None)
     if descs is not None:
         pass
-        #print "des shape", descs.shape
     return kps, descs
 
 # generator descriptors
@@ -131,17 +126,15 @@ def generator_descriptor(fileaddr, save_addr, nfeatures, desp_type):
         print 'create ' + save_addr
     if fileaddr[-1] != '/':
         fileaddr += '/'
-    # fileList = os.listdir(fileaddr)
+
     fileList = glob.glob(fileaddr + "*/*/*.png")
-    #print fileList
     for file in fileList:
         if '.png' in file:
             print file
             filename_des = file.split('/')[-1].split('.')[0]
             data = cv2.imread(file, 0)
-
-            # todo: add new detectors here !
-
+            
+            # choose descriptor algo
             if desp_type == "orb":
                 kp, des = orb_descriptor_generator(data, nfeatures)
 
@@ -164,10 +157,8 @@ def generator_descriptor(fileaddr, save_addr, nfeatures, desp_type):
                 print 'create ' + subdir_addr
             # creat file to store descriptor
             np.save(subdir_addr + '/' + filename_des + '_' + desp_type, des)
-            # np.save(save_addr+'/'+filename_des+'_kp', kp)
 
-
-# generator hists (global descriptors) from data (local descriptors or image)
+# generator histogram (global descriptors) from data (local descriptors or image)
 def generateHist(model, data, data_type, nfeatures, decpt_type):
     """
     :param model: k-means model trained by descriptors in database.
@@ -207,9 +198,6 @@ def generateHist(model, data, data_type, nfeatures, decpt_type):
         if des is None:  # if orb cannot get any keypoints
             return res
         des = np.asarray(des, dtype=np.float32)
-        #des_float = []
-        #for i in range(len(des)):  # convert des from int to float to avoid type warning
-        #    des_float.append(map(float, des[i]))
         label = model.predict(des)
         for value in label:
             res[0, value] += 1.0
@@ -236,14 +224,12 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, mode, cl
         imgs_addr = getImageListFromDir(base_dir)
     dist = {}
     target_hist = generateHist(model, target, 'image', nfeatures, descriptor_type).astype(np.float32)
-    # print np.sum(target_hist)
     
     # calculate distance between target hist and base hists
     for idx, img_addr in enumerate(imgs_addr):
         img_gs = []
         hist = []
         if has_hist == False:
-            #print img_addr
             img_gs = cv2.imread(img_addr, '0')
             hist = generateHist(model, img_gs, 'image', descriptor_type)
         else:
@@ -254,19 +240,23 @@ def searchFromBase(base_dir, target, model, nfeatures, descriptor_type, mode, cl
     sorted_d = OrderedDict(sorted(dist.items(), key=lambda x: x[1]))
     dictlist = []
     for key, value in sorted_d.items():
-        temp = [key, value] # [index, distance]
+        temp = [key, value] # correspond to [index, distance]
         class_actual = imgs_addr[key].split('/')[-1].split('_')[0]
         if mode != 1:
             if class_actual == str(class_id):
                 dictlist.append(temp)
                 filename = imgs_addr[key].split('/')[-1]
-                #print filename,value
         else:
             dictlist.append(temp)
     return dictlist, imgs_addr
 
 
 def get_class_image_list(target_dir, class_name):
+    """
+    :param target_dir: address to search image
+    :param class_name: target class name image
+    :return: a list of image addr of the same class
+    """    
     if target_dir[-1] != '/':
         target_dir += '/'
     l = glob.glob(target_dir + class_name + '/*/*')
@@ -274,6 +264,14 @@ def get_class_image_list(target_dir, class_name):
 
 
 def generate_random_image_list(image_list, class_name, class_start, class_num, num):
+    """
+    :param target_dir: address to search image
+    :param class_name: target class name image
+    :param class_start: class of image in the test set start from (ex. 251)
+    :param class_num: quantity of class in the test set (ex. 50)
+    :param num: the quantity of the image in the output list(ex. 5)
+    :return: a list of image addr of the randomly different classes
+    """    
     class_name = str(class_name)
     image_list_temp = image_list[:]  # to store different image classes
     same_class_image_count = 0
@@ -299,7 +297,8 @@ def generate_random_image_list(image_list, class_name, class_start, class_num, n
     for item in rand_file_num_list:
         rand_image_list.append(image_list_temp[int(item) - class_start])    
     return rand_image_list, same_class_image_count
-
+    
+# init the csv file to record the score of the test images
 def csv_init(csv_file_path, kmeans, nfeatures, class_name, class_width, descriptor_type):
     csv_file_name = csv_file_path + '/kmeans_' + str(kmeans.get_params()['n_clusters']) + '_nf_' + str(nfeatures) + descriptor_type + '_class_' + class_name + '.csv'
     if os.path.exists(csv_file_path) == False:
@@ -312,11 +311,12 @@ def csv_init(csv_file_path, kmeans, nfeatures, class_name, class_width, descript
     writer.writerow(file_header)
     return csvfile, writer
 
-
+# deinit the csv file
 def csv_deinit(csvfile, writer, score_global):
     writer.writerow(['Conclusion'] + score_global[:-1] + ["-"] + [score_global[-1]])
     csvfile.close()    
 
+ # generate Prediction/Recall image
 def pr_image_generate(pr_list,descriptor_type,kmeans, nfeatures):
     """
     :param pr_list: a list of lists (filename, label, score)
@@ -374,9 +374,11 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
 
     for class_name in class_list: # iteration for each class
         pr_list = []
-        class_image_list = get_class_image_list(target_dir, class_name)  # positive examples
+        
+        # examples from the same class
+        class_image_list = get_class_image_list(target_dir, class_name)  
 
-        # negative examples
+        # random examples from different classes
         random_image_list, class_width = generate_random_image_list(image_list, class_name, class_start, class_num, opposite_image_num)
         class_image_list.extend(random_image_list) # joint two lists together
 
@@ -395,8 +397,12 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
                 Truth = 1
             else:
                 Truth = 0
+                
+            # find the nearest images from the image base
             results, imgs_list = searchFromBase(sub_hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_name, has_hist=True)
             count = 0
+            
+            # distrubute a score to each test image according to the its distance to the org image 
             for key, value in results:
                 score = 1.0 / (value+0.001)
                 filename = imgs_list[key].split('/')[-1]
@@ -412,4 +418,6 @@ def pr_csv_generation(target_dir, sub_hist_addr, kmeans, nfeatures, descriptor_t
             score_global[-1] += score_total
         score_global_str = map(str, score_global)
         csv_deinit(csvfile, writer, score_global_str)
+        
+        # generate Prediction/Recall image by using the score
         pr_image_generate(pr_list, descriptor_type, kmeans, nfeatures)

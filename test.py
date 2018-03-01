@@ -14,16 +14,15 @@ import shutil
 def main(train_addr, mode, descriptor_type, nfeatures, class_id, target_addr):
     # definitions #
     model_dir = "./save_model/cv2_kmeans_mini_50_nf_100orb.pkl" # pretrained kmeans model for Brief 100 cluster
-    #target_addr = "./min_merged_test/335/rotation/335_r.png" # target image to search
-    #target_addr = "./min_merged_test/335/luminence/335_i170.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'+descriptor_type # generated histograms for the dataset
     
-    # search similar images from base #
-    kmeans = joblib.load(model_dir) # load pre-trained k-means model #
+
+    # load pre-trained k-means model #
+    kmeans = joblib.load(model_dir) 
     print ('kmeans parameters', kmeans.get_params())    
 
-    # if hist_addr does not exist, generate hists for the data set #
+    # if hist_addr does not exist, generate hists for the data set
     if os.path.exists(hist_addr) == False:
         print "Creating Histograms..."
         os.makedirs(hist_addr)
@@ -48,18 +47,15 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id, target_addr):
             target = cv2.imread(target_addr, 0) 
         else:   
             target = cv2.imread(target_addr)
+        # search similar images from base and get the ranking results  
         results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_id, has_hist)
-        '''count = 1
-        for key, value in results:
-            filename = imgs_list[key].split('/')[-1]
-            print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
-            count += 1
-            if count > 20:
-                break'''
+        
+        # draw the top ranking results in a 3x4 figure
         ax = [0] * 12
         f,((ax[0],ax[1], ax[2], ax[3]),(ax[4],ax[5], ax[6], ax[7]), (ax[8],ax[9], ax[10], ax[11])) = plt.subplots(3,4)
         original = cv2.imread(target_addr) 
         ax[0].set_title("Org: " + target_addr.split('/')[-1].split('.')[0])
+        original = cv2.cvtColor(original,cv2.COLOR_BGR2RGB)
         ax[0].imshow(original)
         ax[0].set_axis_off()
         count = 1                
@@ -80,19 +76,20 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id, target_addr):
                 ranking_image = cv2.imread(imageaddress)
                 ax[count].set_title("NO."+ str(count) + " " + imagename.split('.')[0])
                 ax[count].set_xlabel(" Dist: " + str(value))
+                ranking_image = cv2.cvtColor(ranking_image,cv2.COLOR_BGR2RGB)
                 ax[count].imshow(ranking_image)
                 ax[count].set_axis_off()           
             if count > 20:
                 break
             count += 1
             
-        #plt.show()
         rst_dir = "./image_result/"
         if os.path.exists(rst_dir) == False:
             os.makedirs(rst_dir)         
         plt.savefig(rst_dir + target_addr.split('/')[-1]) 
                                   
-    elif (mode == 2): # try to find self rotated image from the database; rank the result; store in a csv file
+    elif (mode == 2): 
+        # try to find similar from the database; rank the result; calculat score; store in a csv file
         image_list = getImageListFromDir(target_dir)
         i = 0
         
@@ -147,7 +144,7 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id, target_addr):
     elif mode == 4:
         pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, mode, class_id)
           
-    # mode error #
+    # mode no exist #
     else:
         print "mode error should be [1~5]"
 

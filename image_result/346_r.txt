@@ -1,4 +1,0 @@
-train_addr : ./min_merged_train/, desptype : orb, nfeatures : 100
-treating image : ./min_merged_test/346/rotation/346_r.png
-('kmeans parameters', {'n_jobs': 1, 'verbose': 0, 'n_clusters': 50, 'max_iter': 300, 'init': 'k-means++', 'random_state': 0, 'n_init': 10, 'tol': 0.0001, 'precompute_distances': 'auto', 'copy_x': True})
-Histograms exist

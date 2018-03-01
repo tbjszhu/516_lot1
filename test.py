@@ -11,14 +11,14 @@ import argparse
 import shutil
 
 
-def main(train_addr, mode, descriptor_type, nfeatures, class_id):
+def main(train_addr, mode, descriptor_type, nfeatures, class_id, target_addr):
     # definitions #
     model_dir = "./save_model/cv2_kmeans_mini_50_nf_100orb.pkl" # pretrained kmeans model for Brief 100 cluster
     #target_addr = "./min_merged_test/335/rotation/335_r.png" # target image to search
-    target_addr = "./min_merged_test/335/luminence/335_i170.png" # target image to search
+    #target_addr = "./min_merged_test/335/luminence/335_i170.png" # target image to search
     target_dir = "./min_merged_test/" # target dir to search
     hist_addr = './hists/'+descriptor_type # generated histograms for the dataset
-
+    
     # search similar images from base #
     kmeans = joblib.load(model_dir) # load pre-trained k-means model #
     print ('kmeans parameters', kmeans.get_params())    
@@ -49,14 +49,49 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
         else:   
             target = cv2.imread(target_addr)
         results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_id, has_hist)
-        count = 1
+        '''count = 1
         for key, value in results:
             filename = imgs_list[key].split('/')[-1]
             print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
             count += 1
-            if count > 10:
-                break
+            if count > 20:
+                break'''
+        ax = [0] * 12
+        f,((ax[0],ax[1], ax[2], ax[3]),(ax[4],ax[5], ax[6], ax[7]), (ax[8],ax[9], ax[10], ax[11])) = plt.subplots(3,4)
+        original = cv2.imread(target_addr) 
+        ax[0].set_title("Org: " + target_addr.split('/')[-1].split('.')[0])
+        ax[0].imshow(original)
+        ax[0].set_axis_off()
+        count = 1                
+        for key, value in results:
+            filename = imgs_list[key].split('/')[-1]
+            print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
             
+            classname = filename.split('_')[0]
+            imagetype = filename.split('_')[1][0]
+            if imagetype == "i":
+                subdir = "/luminence/"
+            else:
+                subdir = "/rotation/"
+            imagename = filename.split('_')[0] + '_' + filename.split('_')[1] + ".png"
+            imageaddress = "./min_merged_train/" + classname + subdir + imagename
+            print imageaddress
+            if count <= 11:
+                ranking_image = cv2.imread(imageaddress)
+                ax[count].set_title("NO."+ str(count) + " " + imagename.split('.')[0])
+                ax[count].set_xlabel(" Dist: " + str(value))
+                ax[count].imshow(ranking_image)
+                ax[count].set_axis_off()           
+            if count > 20:
+                break
+            count += 1
+            
+        #plt.show()
+        rst_dir = "./image_result/"
+        if os.path.exists(rst_dir) == False:
+            os.makedirs(rst_dir)         
+        plt.savefig(rst_dir + target_addr.split('/')[-1]) 
+                                  
     elif (mode == 2): # try to find self rotated image from the database; rank the result; store in a csv file
         image_list = getImageListFromDir(target_dir)
         i = 0
@@ -111,32 +146,7 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
     # mode for generating result for a given class in the test set #
     elif mode == 4:
         pr_csv_generation(target_dir, hist_addr, kmeans, nfeatures, descriptor_type, mode, class_id)
-        
-    elif mode == 5:
-        if descriptor_type == 'brief':
-            target = cv2.imread(target_addr, 0) 
-        else:   
-            target = cv2.imread(target_addr)
-        results, imgs_list = searchFromBase(hist_addr, target, kmeans, nfeatures, descriptor_type, mode, class_id, has_hist)
-
-        ax = [0] * 6
-        f,((ax[0],ax[1]),(ax[2],ax[3]), (ax[4],ax[5])) = plt.subplots(3,2)
-        original = cv2.imread(target_addr, 0) 
-        ax[0].set_title("Original")
-        ax[0].imshow(original)
-        ax[0].set_axis_off()
-        count = 1                
-        for key, value in results:
-            filename = imgs_list[key].split('/')[-1]
-            fileaddr = imgs_list[key]
-            print ('NO. ' + str(count) +' is: ' + filename + ' distance : ' + str(value))
-            ranking_image = cv2.imread(fileaddr, 0)
-            ax[count].set_title("Original")
-            ax[count].imshow(ranking_image)
-            ax[count].set_axis_off()            
-            count += 1
-            if count > 4:
-                break
+          
     # mode error #
     else:
         print "mode error should be [1~5]"
@@ -146,6 +156,7 @@ def main(train_addr, mode, descriptor_type, nfeatures, class_id):
 
 
 if __name__ == '__main__':
+    #run example: python test.py -n 100 -c 50 -d orb -m 1 -i 266_c > ./image_result/266_c.txt #
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", type=int, default=100,
                         help="Number of feature point for each image.")
@@ -159,7 +170,8 @@ if __name__ == '__main__':
                         help="training set addr")
     parser.add_argument("--tid", type=str, default=255,
                         help="test image class id for mode 4")
-
+    parser.add_argument("-i", type=str, default="251_i120",
+                        help="test image name")
     args = parser.parse_args()
     
     train_addr = args.addr  # './min_merged_train/', path where train images lie
@@ -167,5 +179,17 @@ if __name__ == '__main__':
     descriptor_type = args.d
     mode = args.m
     class_id = args.tid  # for mode 4, assign class id
-    print "train_addr : %s, desptype : %s, nfeatures : %d" % (train_addr, descriptor_type, nfeatures)    
-    main(train_addr, mode, descriptor_type, nfeatures, class_id)
+    filename = args.i
+    
+    classname = filename.split('_')[0]
+    imagetype = filename.split('_')[1][0]
+    if imagetype == "i":
+        subdir = "/luminence/"
+    else:
+        subdir = "/rotation/"
+    imagename = filename.split('_')[0] + '_' + filename.split('_')[1] + ".png"
+    imageaddress = "./min_merged_test/" + classname + subdir + imagename
+    
+    print "train_addr : %s, desptype : %s, nfeatures : %d" % (train_addr, descriptor_type, nfeatures)
+    print "treating image : " + imageaddress        
+    main(train_addr, mode, descriptor_type, nfeatures, class_id, imageaddress)
